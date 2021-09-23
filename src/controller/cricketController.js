@@ -41,11 +41,40 @@ const getAllMatches = async (req, res) => {
   try {
     const query = Cricket.find({}); // MongoDB Query
     const result = await query.exec();
+    var winCount = {};
+    var lossCount = {};
+    const listOfTeams = new Set();
+    for (var i = 0; i < result.length; i++) {
+      console.log(result);
+      if (result[i].winner == result[i].team1) {
+        winner = result[i].team1;
+        loser = result[i].team2;
+      } else {
+        winner = result[i].team2;
+        loser = result[i].team1;
+      }
+      listOfTeams.add(winner);
+      listOfTeams.add(loser);
+      winCount[winner] = (winCount[winner] || 0) + 1;
+      lossCount[loser] = (lossCount[loser] || 0) + 1;
+    }
+    var summary = [];
+    for (let team of listOfTeams) {
+      var data = {
+        Name: team,
+        Wins: winCount[team],
+        Lost: lossCount[team],
+      };
+      summary.push(data);
+    }
+
+    console.log(summary);
+
     if (result) {
       return {
         success: 200,
         message: "All Matches Fetched",
-        data: result,
+        data: summary,
       };
     } else {
       return {
