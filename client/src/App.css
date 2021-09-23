@@ -9,15 +9,28 @@
   margin: 0px;
   padding-bottom: 100px;
   overflow-y: scroll;
+  box-sizing: border-box;
 }
 
 .main-wrapper__content {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+  box-sizing: border-box;
+  padding: 0px 100px;
 }
 
 body {
   margin: 0px;
   padding: 0px;
+}
+
+@media screen and (max-width: 500px) {
+  .main-wrapper__content {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    padding: 0px 10px;
+  }
 }
