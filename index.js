@@ -26,7 +26,7 @@ fastify.get("/", (req, res) => {
 
 //MongoDB
 mongoose
-  .connect("mongodb://mongo:27018/cricketInfo", {
+  .connect("mongodb://mongo:27017/cricketInfo", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

@@ -1,7 +1,7 @@
 version: "3"
 services:
   api-server:
-    image: cricketinfo
+    image: api-server
     stdin_open: true
     ports:
       - "5000:5000"
@@ -10,4 +10,4 @@ services:
   mongo:
     image: mongo:5.0.3
     ports:
-      - "27018:27018"
+      - "27017:27017"
