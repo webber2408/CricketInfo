@@ -3,11 +3,13 @@ import "./navbar.css";
 
 const Navbar = () => {
   return (
-    <nav>
-      <ul>
-        <li>Cricket Information System</li>
-      </ul>
-    </nav>
+    <div>
+      <nav>
+        <ul>
+          <li>Cricket Information System (IPL)</li>
+        </ul>
+      </nav>
+    </div>
   );
 };
 
