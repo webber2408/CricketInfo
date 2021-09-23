@@ -6,6 +6,8 @@ import Navbar from "./components/navbar/navbar";
 
 import { getAllMatches } from "./slices/cricketSlice";
 
+import { TEAMS } from "./team_config/config";
+
 import "./App.css";
 
 const App = () => {
@@ -27,10 +29,9 @@ const App = () => {
       <div className="main-wrapper-overlay">
         <Navbar />
         <div className="main-wrapper__content">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {Object.values(TEAMS).map((team) => {
+            return <Card team={team} />;
+          })}
         </div>
       </div>
     </div>
