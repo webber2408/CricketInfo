@@ -1,13 +1,13 @@
 version: "3"
 services:
   api-server:
-    image: api-server
+    image: cricketinfo
     stdin_open: true
     ports:
       - "5000:5000"
     depends_on:
       - mongo
   mongo:
-    image: mongo:3.6.19-xenial
+    image: mongo:5.0.3
     ports:
       - "27018:27018"
