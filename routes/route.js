@@ -12,6 +12,11 @@ const routes = [
     handler: CricketController.getAllMatches,
   },
   {
+    method: "GET",
+    url: "/api/cricket/teamStatistics",
+    handler: CricketController.getAllTeamsStats,
+  },
+  {
     method: "PUT",
     url: "/api/cricket/:matchId",
     handler: CricketController.updateMatchDetails,

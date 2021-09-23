@@ -1,0 +1,87 @@
+{
+	"info": {
+		"_postman_id": "cd2b97ae-c1a1-4b7b-abf8-44e7226abda1",
+		"name": "Cricket",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get All Matches",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/cricket/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"cricket",
+						"all"
+					]
+				},
+				"description": "Get All Matched"
+			},
+			"response": []
+		},
+		{
+			"name": "Add Match Details",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"city\": \"Banglore\",\n  \"date\": \"Sept 20, 2021\",\n  \"player_of_match\": \"Dhoni\",\n  \"team1\": \"CSK\",\n  \"team2\": \"PBKS\",\n  \"winner\": \"CSK\"\n}",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/cricket",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"cricket"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Match Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Match Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "Get Team Statistics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		}
+	]
+}
