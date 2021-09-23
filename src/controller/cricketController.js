@@ -43,6 +43,7 @@ const getAllMatches = async (req, res) => {
     const result = await query.exec();
     var winCount = {};
     var lossCount = {};
+    var totalMatches = {};
     const listOfTeams = new Set();
     for (var i = 0; i < result.length; i++) {
       console.log(result);
@@ -53,17 +54,24 @@ const getAllMatches = async (req, res) => {
         winner = result[i].team2;
         loser = result[i].team1;
       }
+      console.log("winner is " + winner);
+      console.log("losser is " + loser);
       listOfTeams.add(winner);
       listOfTeams.add(loser);
       winCount[winner] = (winCount[winner] || 0) + 1;
-      lossCount[loser] = (lossCount[loser] || 0) + 1;
+      totalMatches[winner] = (totalMatches[winner] || 0) + 1;
+      totalMatches[loser] = (totalMatches[loser] || 0) + 1;
+      winCount[loser] = winCount[loser] || 0;
+      console.log(winCount);
     }
     var summary = [];
+    console.log(listOfTeams);
     for (let team of listOfTeams) {
       var data = {
         Name: team,
         Wins: winCount[team],
-        Lost: lossCount[team],
+        Lost: totalMatches[team] - winCount[team],
+        Total: totalMatches[team],
       };
       summary.push(data);
     }
