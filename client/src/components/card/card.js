@@ -7,7 +7,7 @@ const Card = () => {
       <div className="flip-card-inner">
         <div class="flip-card-front">
           <div className="size_max">RCB</div>
-          <div>vs</div>
+          <div>Vs</div>
           <div className="size_max">CSK</div>
         </div>
         <div class="flip-card-back">
