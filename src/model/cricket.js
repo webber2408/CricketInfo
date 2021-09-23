@@ -6,7 +6,8 @@ const cricketSchema = new mongoose.Schema({
   player_of_match: String,
   team1: String,
   team2: String,
-  winner: String
+  winner: String,
+  matchId: String
 });
 
 module.exports = mongoose.model('Cricket', cricketSchema);

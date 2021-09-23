@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Cricket Information System",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "start" : "node index.js",
+    "start-nodemon": "nodemon index.js"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
