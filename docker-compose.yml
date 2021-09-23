@@ -1,5 +1,10 @@
 version: "3"
 services:
+  client-app:
+    image: client-app
+    stdin_open: true
+    ports:
+      - "3000:3000"
   api-server:
     image: api-server
     stdin_open: true

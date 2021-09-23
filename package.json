@@ -4,13 +4,14 @@
   "description": "Cricket Information System",
   "main": "index.js",
   "scripts": {
-    "start" : "node index.js",
+    "start": "node index.js",
     "start-nodemon": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "fastify": "^3.21.5",
+    "fastify-cors": "^6.0.2",
     "mongoose": "^6.0.7",
     "nodemon": "^2.0.12",
     "uuid": "^8.3.2"

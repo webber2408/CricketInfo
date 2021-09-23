@@ -6,10 +6,10 @@ const fastify = require("fastify")({ logger: true });
 const SERVER_PORT = 5000;
 
 //CORS
-// fastify.register(require('fastify-cors'), {
-//   origin: ["*"],
-//   method: ["GET", "POST", "PUT", "DELETE"]
-// });
+fastify.register(require("fastify-cors"), {
+  origin: ["http://localhost:3000"],
+  method: ["GET", "POST", "PUT", "DELETE"],
+});
 
 //Routes
 const routes = require("./routes/route.js");
