@@ -17,7 +17,7 @@ const addMatch = async (req, res) => {
     const isDuplicate1 = await query1.exec();
     const isDuplicate2 = await query2.exec();
 
-    if (isDuplicate1[0] || isDuplicate1[0]) {
+    if (isDuplicate1[0] || isDuplicate2[0]) {
       return {
         success: 422,
         message:
@@ -41,15 +41,38 @@ const addMatch = async (req, res) => {
   }
 };
 
-//
-
-// READ
+// Getting all data present in the DB
 const getAllMatches = async (req, res) => {
   try {
     const query = Cricket.find({}); // MongoDB Query
     const result = await query.exec();
+    if (result) {
+      return {
+        success: 200,
+        message: "All Matches Fetched",
+        data: result,
+      };
+    } else {
+      return {
+        success: 404,
+        message: "No matches found",
+      };
+    }
+  } catch (err) {
+    console.error("getAllMatches failed ", err);
+    return {
+      success: 400,
+      message: "getAllMatches error",
+    };
+  }
+};
+
+// Getting team statistics
+const getAllTeamsStats = async (req, res) => {
+  try {
+    const query = Cricket.find({}); // MongoDB Query
+    const result = await query.exec();
     var winCount = {};
-    var lossCount = {};
     var totalMatches = {};
     const listOfTeams = new Set();
     for (var i = 0; i < result.length; i++) {
@@ -85,20 +108,20 @@ const getAllMatches = async (req, res) => {
     if (result) {
       return {
         success: 200,
-        message: "All Matches Fetched",
+        message: "All teams data fetched and stats calculated",
         data: summary,
       };
     } else {
       return {
         success: 404,
-        message: "No mathes found",
+        message: "No data found",
       };
     }
   } catch (err) {
-    console.error("getAllMatches failed ", err);
+    console.error("getAllTeamsStats failed ", err);
     return {
       success: 400,
-      message: "getAllMatches error",
+      message: "getAllTeamsStats error",
     };
   }
 };
@@ -159,6 +182,7 @@ const deleteMatchDetails = async (req, res) => {
 module.exports = {
   addMatch,
   getAllMatches,
+  getAllTeamsStats,
   updateMatchDetails,
   deleteMatchDetails,
 };
