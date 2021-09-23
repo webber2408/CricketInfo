@@ -6,17 +6,22 @@ const addMatch = async (req, res) => {
   try {
     const matchData = JSON.parse(req.body);
     matchData.matchId = uuidv4();
-    const query = Cricket.find({
+    const query1 = Cricket.find({
       team1: matchData.team1,
+      date: matchData.date,
+    });
+    const query2 = Cricket.find({
       team2: matchData.team2,
       date: matchData.date,
     });
-    const isDuplicate = await query.exec();
-    if (isDuplicate[0]) {
+    const isDuplicate1 = await query1.exec();
+    const isDuplicate2 = await query2.exec();
+
+    if (isDuplicate1[0] || isDuplicate1[0]) {
       return {
         success: 422,
         message:
-          "There already exists a match between the given teams on the specified date.",
+          "There already exists a match for one of the teams on the specified date.",
       };
     }
     const savingData = new Cricket(matchData).save();
@@ -36,6 +41,8 @@ const addMatch = async (req, res) => {
   }
 };
 
+//
+
 // READ
 const getAllMatches = async (req, res) => {
   try {
@@ -54,23 +61,20 @@ const getAllMatches = async (req, res) => {
         winner = result[i].team2;
         loser = result[i].team1;
       }
-      console.log("winner is " + winner);
-      console.log("losser is " + loser);
       listOfTeams.add(winner);
       listOfTeams.add(loser);
       winCount[winner] = (winCount[winner] || 0) + 1;
       totalMatches[winner] = (totalMatches[winner] || 0) + 1;
       totalMatches[loser] = (totalMatches[loser] || 0) + 1;
       winCount[loser] = winCount[loser] || 0;
-      console.log(winCount);
     }
     var summary = [];
     console.log(listOfTeams);
     for (let team of listOfTeams) {
       var data = {
         Name: team,
-        Wins: winCount[team],
-        Lost: totalMatches[team] - winCount[team],
+        Wins: winCount[team] / totalMatches[team],
+        Lost: (totalMatches[team] - winCount[team]) / totalMatches[team],
         Total: totalMatches[team],
       };
       summary.push(data);
