@@ -57,3 +57,12 @@
   color: white;
   transform: rotateY(180deg);
 }
+
+.no-matches {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}

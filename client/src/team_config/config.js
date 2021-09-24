@@ -9,35 +9,35 @@ import sh from "../assets/teams/sunrisers_hyderabad.png";
 
 export const TEAMS = {
   CSK: {
-    title: "Chennai Super Kings",
+    title: "CSK",
     bg: csk,
   },
   DC: {
-    title: "Delhi Capitals",
+    title: "DC",
     bg: dc,
   },
   KKR: {
-    title: "Kolkata Night Riders",
+    title: "KKR",
     bg: kkr,
   },
   MI: {
-    title: "Mumbai Indians",
+    title: "MI",
     bg: mi,
   },
   PBKS: {
-    title: "Punjab Kings",
+    title: "PBKS",
     bg: pk,
   },
   RR: {
-    title: "Rajasthan Royals",
+    title: "RR",
     bg: rr,
   },
   RCB: {
-    title: "Royal Challengers Banglore",
+    title: "RCB",
     bg: rcb,
   },
   SRH: {
-    title: "Sunrisers Hyderabad",
+    title: "SRH",
     bg: sh,
   },
 };
