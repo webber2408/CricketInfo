@@ -96,8 +96,9 @@ const getAllTeamsStats = async (req, res) => {
     for (let team of listOfTeams) {
       var data = {
         Name: team,
-        Wins: winCount[team] / totalMatches[team],
-        Lost: (totalMatches[team] - winCount[team]) / totalMatches[team],
+        Wins: (winCount[team] * 100) / totalMatches[team],
+        Lost:
+          ((totalMatches[team] - winCount[team]) * 100) / totalMatches[team],
         Total: totalMatches[team],
       };
       summary.push(data);
