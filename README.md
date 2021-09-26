@@ -27,10 +27,10 @@ We aim to create a distributed system that notifes the user about various cricke
 We will be publishing the app on Docker so that the app is platform independant and can be used ubiquitously. 
 
 ## Technologies Used
-Front-End Development: React JS
-Back-End Development : Node JS
-Database: MongoDB
-Deployment : Docker
+- Front-End Development: React JS
+- Back-End Development : Node JS
+- Database: MongoDB
+- Deployment : Docker
 
 ## Prerequisites:
 1. [node](http://nodejs.org) 
@@ -76,6 +76,6 @@ $ standard-readme-spec
 ### Contributors
 
 This project exists thanks to all the people who contribute. 
-<a href="https://github.com/RichardLitt/standard-readme/graphs/contributors"><img src="https://opencollective.com/standard-readme/contributors.svg?width=890&button=false" /></a>
+<a href="https://github.com/webber2408/CricketInfo/contributors"><img src="https://opencollective.com/standard-readme/contributors.svg?width=890&button=false" /></a>
 
 
