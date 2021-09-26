@@ -1,7 +1,6 @@
 FROM node:latest
 
-# RUN mkdir -p /app
-WORKDIR '/app'
+WORKDIR '/cricket-api'
 COPY package.json .
 RUN npm install
 COPY  . .

@@ -1,6 +1,6 @@
 FROM node:latest
 
-WORKDIR '/client-app'
+WORKDIR '/cricket-client'
 COPY package.json .
 RUN npm install
 COPY  . .
