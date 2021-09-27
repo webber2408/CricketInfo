@@ -92,11 +92,30 @@ We have created a UI where a person is able to see the win percentage of a parti
    - Display of team statistics from the Get Team Statistics API.
   #### Screenshots ####
    - UI Landing Page
-   ![](client/screenshots/UI-1.png)
+ 
+     ![](client/screenshots/UI-1.png)
+   
+   - UI add match form that uses the "Add match details api."
+
+     ![](client/screenshots/UI-2.png)
      
-  
-  
-  
+   - UI add match form with sample values.
+   
+     ![](client/screenshots/UI-3.png)
+     
+   - UI add match success.
+
+     ![](client/screenshots/UI-4.png)
+     
+   - UI match present check that prevents the user from adding the match if some constraints are satisfied.
+     
+     ![](client/screenshots/UI-5.png)
+   
+   - UI display of match statistics with the help of a pie chart.
+     
+     ![](client/screenshots/UI-6.png)
+     
+ 
 ## Installation
 
 A shell script has been created to compile and run the app on docker. Please ensure that the docker is runnning before executing the script.
