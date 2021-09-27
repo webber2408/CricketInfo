@@ -56,6 +56,9 @@ We will be publishing the app on Docker so that the app is platform independant 
 **26th September,2021:** We have created a simple CRUD (Create,Read,Update,Delete) app that fetches the data from the database and gives us the relevant values.
 We have created a UI where a person is able to see the win percentage of a particular team by clicking on the respective cards. Five API's have been created to create this version.
 
+ ### Client-Server Interaction 
+ ![](screenshots/clientServerInteraction.HEIC)
+
  ### Backend Status: ###
    #### Ports ####
    - Backend: 5000
