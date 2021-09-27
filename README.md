@@ -96,8 +96,8 @@ We have created a UI where a person is able to see the win percentage of a parti
 A shell script has been created to compile and run the app on docker. Please ensure that the docker is runnning before executing the script.
 
  ### Shell script working:###
-     - The shell script calls the docker function to build the images for both the client and server.
-     - After this the docker-compose is called that builds the images of the mongoDb and fetches the images made in the above step. Then it creates a docker contaioner    and sequentially compiles the images and connects them so that data can flow between the three components.
+   - The shell script calls the docker function to build the images for both the client and server.
+   - After this the docker-compose is called that builds the images of the mongoDb and fetches the images made in the above step. Then it creates a docker contaioner and sequentially compiles the images and connects them so that data can flow between the three components.
 
 ```sh
 $ sh start_application.sh
