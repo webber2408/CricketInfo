@@ -53,7 +53,7 @@ We will be publishing the app on Docker so that the app is platform independant 
 - [docker](https://www.docker.com/)
 
 ## CurrentStatus 
-[26th September,2021]: We have created a simple CRUD (Create,Read,Update,Delete) app that fetches the data from the database and gives us the relevant values.
+**26th September,2021:** We have created a simple CRUD (Create,Read,Update,Delete) app that fetches the data from the database and gives us the relevant values.
 We have created a UI where a person is able to see the win percentage of a particular team by clicking on the respective cards. Five API's have been created to create this version.
 
  ### Backend Status: ###
@@ -95,9 +95,9 @@ We have created a UI where a person is able to see the win percentage of a parti
 
 A shell script has been created to compile and run the app on docker. Please ensure that the docker is runnning before executing the script.
 
- ### Shell script working:###
+ ### Shell script working:
    - The shell script calls the docker function to build the images for both the client and server.
-   - After this the docker-compose is called that builds the images of the mongoDb and fetches the images made in the above step. Then it creates a docker contaioner and sequentially compiles the images and connects them so that data can flow between the three components.
+   - After this the docker-compose is called that builds the images of the mongoDb and fetches the images made in the above step. Then it creates a docker container and sequentially compiles the images and connects them so that data can flow between the three components.
 
 ```sh
 $ sh start_application.sh
