@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 // CREATE
 const addMatch = async (req, res) => {
   try {
-    const matchData = JSON.parse(req.body);
+    const matchData = req.body;
     matchData.matchId = uuidv4();
     const query1 = Cricket.find({
       team1: matchData.team1,
@@ -132,7 +132,7 @@ const updateMatchDetails = async (req, res) => {
   try {
     const query = Cricket.findOneAndUpdate(
       { matchId: req.params.matchId },
-      JSON.parse(req.body)
+      req.body
     );
     const result = await query.exec();
     if (result) {
@@ -159,7 +159,7 @@ const deleteMatchDetails = async (req, res) => {
   try {
     const query = Cricket.findOneAndDelete(
       { matchId: req.params.matchId },
-      JSON.parse(req.body)
+      req.body
     );
     const result = await query.exec();
     if (result) {

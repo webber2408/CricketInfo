@@ -4,6 +4,7 @@ import api from "../apiClient/axios";
 const initialState = {
   matches: [],
   matchStats: [],
+  matchAdded: false,
 };
 
 export const getAllMatches = createAsyncThunk(
@@ -31,6 +32,11 @@ export const getMatchStats = createAsyncThunk(
     return await response.data.data;
   }
 );
+
+export const addMatch = createAsyncThunk("cricket/addMatch", async (match) => {
+  const response = await api.post("/cricket", match);
+  return response;
+});
 
 export const cricketSlice = createSlice({
   name: "cricket",

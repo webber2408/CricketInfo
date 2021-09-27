@@ -12,19 +12,13 @@ import "./App.css";
 
 const App = () => {
   const dispatch = useDispatch();
-  const matches = useSelector((state) => state.cricket.matches);
+  // const matches = useSelector((state) => state.cricket.matches);
   const matchStats = useSelector((state) => state.cricket.matchStats);
 
   useEffect(() => {
     dispatch(getAllMatches());
     dispatch(getMatchStats());
   }, []);
-
-  useEffect(() => {
-    console.log(matchStats);
-  }, [matchStats]);
-
-  console.log("matchStats", matchStats);
 
   return (
     <div className="main-wrapper">
