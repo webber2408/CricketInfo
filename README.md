@@ -91,6 +91,9 @@ We have created a UI where a person is able to see the win percentage of a parti
    - Creation of Add form to add match details.
    - Display of team statistics from the Get Team Statistics API.
   #### Screenshots ####
+   - UI Landing Page
+   ![](client/screenshots/UI-1.png)
+     
   
   
   
