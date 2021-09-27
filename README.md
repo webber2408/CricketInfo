@@ -57,7 +57,7 @@ We will be publishing the app on Docker so that the app is platform independant 
 We have created a UI where a person is able to see the win percentage of a particular team by clicking on the respective cards. Five API's have been created to create this version.
 
  ### Client-Server Interaction 
- ![](screenshots/clientServerInteraction.HEIC)
+ ![](screenshots/clientServerInteraction.png)
 
  ### Backend Status: ###
    #### Ports ####
