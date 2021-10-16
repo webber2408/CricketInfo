@@ -21,6 +21,14 @@ const Topics = () => {
     window.location.href = "/";
   }
 
+  const onSubscribe = (topic) => {
+    dispatch(subscribeTopic({ email: userEmail, topicId: topic.topicId }));
+  };
+
+  const onUnsubscribe = (topic) => {
+    dispatch(unsubscribeTopic({ email: userEmail, topicId: topic.topicId }));
+  };
+
   useEffect(() => {
     dispatch(getAvailableTopics(userEmail));
     dispatch(getMyTopics(userEmail));
@@ -38,11 +46,7 @@ const Topics = () => {
               <TopicCard
                 topic={topic}
                 key={index}
-                onSubscribe={() => {
-                  dispatch(
-                    subscribeTopic({ email: userEmail, topicId: topic.topicId })
-                  );
-                }}
+                onSubscribe={() => onSubscribe(topic)}
               />
             ))}
           </div>
@@ -60,14 +64,7 @@ const Topics = () => {
                 topic={topic}
                 key={index}
                 isSubscribed
-                onUnsubscribe={() => {
-                  dispatch(
-                    unsubscribeTopic({
-                      email: userEmail,
-                      topicId: topic.topicId,
-                    })
-                  );
-                }}
+                onUnsubscribe={() => onUnsubscribe(topic)}
               />
             ))}
           </div>

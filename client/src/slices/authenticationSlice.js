@@ -16,7 +16,9 @@ export const login = createAsyncThunk(
         errorMessage: "Error fetching the matches",
       });
     }
-    localStorage.setItem("TOKEN", response.data?.token);
+    if (response.data && response.data.token) {
+      localStorage.setItem("TOKEN", response.data.token);
+    }
     localStorage.setItem("USER_EMAIL", response.data?.email);
     return await response.data;
   }
