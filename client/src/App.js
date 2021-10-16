@@ -5,6 +5,7 @@ import Home from "./components/home";
 import Login from "./components/login";
 import Register from "./components/register";
 import Profile from "./components/profile";
+import Topics from "./components/topics";
 
 import "./App.css";
 
@@ -23,6 +24,9 @@ const App = () => {
             </Route>
             <Route path="/profile" exact>
               <Profile />
+            </Route>
+            <Route path="/subscriptions" exact>
+              <Topics />
             </Route>
             <Route path="/dashboard" exact>
               <Home />

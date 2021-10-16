@@ -5,7 +5,6 @@ const getUserProfile = async (req, res) => {
     const email = req.query.email;
     const user = await User.find({ email: email }).exec();
     if (user[0]) {
-      console.log(user[0]);
       const toReturnUser = {
         email: user[0].email,
         name: user[0].name,

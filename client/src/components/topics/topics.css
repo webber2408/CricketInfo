@@ -1,0 +1,15 @@
+.topics {
+  width: 100%;
+  padding: 0px 40px;
+  box-sizing: border-box;
+}
+.topics_heading {
+  border-bottom: 1px solid rgb(112, 112, 112);
+  color: rgb(112, 112, 112);
+  margin-bottom: 20px;
+}
+.topics_wrapper {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}

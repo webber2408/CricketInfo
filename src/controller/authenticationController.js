@@ -56,6 +56,7 @@ const register = async (req, res) => {
         message: "User already registered, please login",
       };
     }
+    toSaveUser.subscribedTopicIds = [];
     const result = await new User({ ...toSaveUser }).save();
     if (result) {
       return {

@@ -28,6 +28,7 @@ const Profile = () => {
       <div className="profile_heading">
         <h2>Profile</h2>
       </div>
+      {user && <h3>{user.name}</h3>}
       {user && <h3>{user.email}</h3>}
     </div>
   );

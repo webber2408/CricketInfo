@@ -1,6 +1,7 @@
 const CricketController = require("../src/controller/cricketController");
 const AuthenticationController = require("../src/controller/authenticationController");
 const UserController = require("../src/controller/userController");
+const TopicController = require("../src/controller/topicController");
 
 const routes = [
   {
@@ -51,8 +52,42 @@ const userRoutes = [
   },
 ];
 
+const topicRoutes = [
+  {
+    method: "GET",
+    url: "/api/topic/all",
+    handler: TopicController.getAllTopics,
+  },
+  {
+    method: "POST",
+    url: "/api/topic/",
+    handler: TopicController.addTopic,
+  },
+  {
+    method: "GET",
+    url: "/api/user/:userEmail/topic/:topicId/subscribe",
+    handler: TopicController.subscribeToTopic,
+  },
+  {
+    method: "GET",
+    url: "/api/user/:userEmail/topic/:topicId/unsubscribe",
+    handler: TopicController.unsubscribeToTopic,
+  },
+  {
+    method: "GET",
+    url: "/api/user/:email/topic/available",
+    handler: TopicController.getAllAvailableTopics,
+  },
+  {
+    method: "GET",
+    url: "/api/user/:email/topic/subscribed",
+    handler: TopicController.getUserTopics,
+  },
+];
+
 module.exports = {
   routes,
   userRoutes,
+  topicRoutes,
   authenticationRoutes,
 };
