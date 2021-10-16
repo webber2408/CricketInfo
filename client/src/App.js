@@ -1,39 +1,34 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-
-import Card from "./components/card/card";
+import React from "react";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Navbar from "./components/navbar/navbar";
-
-import { getAllMatches, getMatchStats } from "./slices/cricketSlice";
-
-import { TEAMS } from "./team_config/config";
+import Home from "./components/home";
+import Login from "./components/login";
+import Register from "./components/register";
+import Profile from "./components/profile";
 
 import "./App.css";
 
 const App = () => {
-  const dispatch = useDispatch();
-  // const matches = useSelector((state) => state.cricket.matches);
-  const matchStats = useSelector((state) => state.cricket.matchStats);
-
-  useEffect(() => {
-    dispatch(getAllMatches());
-    dispatch(getMatchStats());
-  }, []);
-
   return (
     <div className="main-wrapper">
       <div className="main-wrapper-overlay">
         <Navbar />
-        <div className="main-wrapper__content">
-          {Object.values(TEAMS).map((team) => {
-            return (
-              <Card
-                team={team}
-                matchStat={matchStats.find((item) => item.Name == team.title)}
-              />
-            );
-          })}
-        </div>
+        <Router>
+          <Switch>
+            <Route path="/" exact>
+              <Login />
+            </Route>
+            <Route path="/register" exact>
+              <Register />
+            </Route>
+            <Route path="/profile" exact>
+              <Profile />
+            </Route>
+            <Route path="/dashboard" exact>
+              <Home />
+            </Route>
+          </Switch>
+        </Router>
       </div>
     </div>
   );

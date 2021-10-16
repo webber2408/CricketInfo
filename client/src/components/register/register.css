@@ -1,0 +1,24 @@
+.loginForm {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.loginForm > .heading {
+  width: 50%;
+  display: flex;
+  border-bottom: 1px solid rgb(112, 112, 112);
+  justify-content: flex-start;
+  color: rgb(112, 112, 112);
+}
+
+.loginForm > form {
+  margin-top: 40px;
+  width: 50%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+}

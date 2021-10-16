@@ -1,4 +1,6 @@
 const CricketController = require("../src/controller/cricketController");
+const AuthenticationController = require("../src/controller/authenticationController");
+const UserController = require("../src/controller/userController");
 
 const routes = [
   {
@@ -28,6 +30,29 @@ const routes = [
   },
 ];
 
+const authenticationRoutes = [
+  {
+    method: "POST",
+    url: "/api/login",
+    handler: AuthenticationController.login,
+  },
+  {
+    method: "POST",
+    url: "/api/register",
+    handler: AuthenticationController.register,
+  },
+];
+
+const userRoutes = [
+  {
+    method: "GET",
+    url: "/api/user/profile",
+    handler: UserController.getUserProfile,
+  },
+];
+
 module.exports = {
   routes,
+  userRoutes,
+  authenticationRoutes,
 };

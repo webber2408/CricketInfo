@@ -7,10 +7,6 @@ import MatchForm from "../matchForm/matchForm";
 
 import "./navbar.css";
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
 function getModalStyle() {
   return {
     top: `10%`,
@@ -33,6 +29,9 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalStyle] = useState(getModalStyle);
   const classes = useStyles();
+  const isAdmin = window.location.pathname == "/dashboard-admin";
+  const isDashboard = window.location.pathname == "/dashboard";
+  const isProfile = window.location.pathname == "/profile";
 
   return (
     <div>
@@ -44,15 +43,71 @@ const Navbar = () => {
       <nav>
         <ul>
           <li>Cricket Information System (IPL)</li>
-          <li>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => setIsOpen(true)}
-            >
-              Add Match
-            </Button>
-          </li>
+          {isAdmin && (
+            <li>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => setIsOpen(true)}
+              >
+                Add Match
+              </Button>
+            </li>
+          )}
+          {isDashboard && (
+            <>
+              <li>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => {
+                    window.location.href = "/profile";
+                  }}
+                >
+                  Profile
+                </Button>
+              </li>
+              <li>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => {
+                    localStorage.removeItem("TOKEN");
+                    window.location.href = "/";
+                  }}
+                >
+                  Logout
+                </Button>
+              </li>
+            </>
+          )}
+          {isProfile && (
+            <>
+              <li>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => {
+                    window.location.href = "/dashboard";
+                  }}
+                >
+                  Dashboard
+                </Button>
+              </li>
+              <li>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => {
+                    localStorage.removeItem("TOKEN");
+                    window.location.href = "/";
+                  }}
+                >
+                  Logout
+                </Button>
+              </li>
+            </>
+          )}
         </ul>
       </nav>
     </div>
