@@ -13,9 +13,11 @@ const publishMessage = async (req, res) => {
         };
       })
       .catch((err) => {
+        console.log(err);
         return {
           success: 422,
           message: "Error publishing message",
+          error: err,
         };
       });
   } catch (err) {
