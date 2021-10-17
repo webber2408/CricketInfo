@@ -2,6 +2,7 @@ const CricketController = require("../src/controller/cricketController");
 const AuthenticationController = require("../src/controller/authenticationController");
 const UserController = require("../src/controller/userController");
 const TopicController = require("../src/controller/topicController");
+const PublishController = require("../src/controller/publishController");
 
 const routes = [
   {
@@ -85,9 +86,18 @@ const topicRoutes = [
   },
 ];
 
+const publishRoutes = [
+  {
+    method: "POST",
+    url: "/api/publish",
+    handler: PublishController.publishMessage,
+  },
+];
+
 module.exports = {
   routes,
   userRoutes,
   topicRoutes,
   authenticationRoutes,
+  publishRoutes,
 };

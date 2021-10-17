@@ -10,11 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "amqplib": "^0.8.0",
     "fastify": "^3.21.5",
     "fastify-cors": "^6.0.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.7",
     "nodemon": "^2.0.12",
+    "redux-persist": "^6.0.0",
     "uuid": "^8.3.2"
   }
 }

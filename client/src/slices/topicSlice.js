@@ -5,6 +5,8 @@ const initialState = {
   topics: [],
   availableTopics: [],
   myTopics: [],
+  selectedTopic: null,
+  selectedTopicData: null,
 };
 
 export const getAllTopics = createAsyncThunk(
@@ -83,7 +85,14 @@ export const unsubscribeTopic = createAsyncThunk(
 export const topic = createSlice({
   name: "topic",
   initialState,
-  reducers: {},
+  reducers: {
+    selectTopic: (state, { payload }) => {
+      state.selectedTopic = payload;
+    },
+    addSelectedTopicData: (state, { payload }) => {
+      state.selectedTopicData = payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getAllTopics.fulfilled, (state, { payload }) => {
       state.topics = payload;
@@ -97,4 +106,5 @@ export const topic = createSlice({
   },
 });
 
+export const { selectTopic, addSelectedTopicData } = topic.actions;
 export default topic.reducer;

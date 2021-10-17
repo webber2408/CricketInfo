@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAvailableTopics,
   getMyTopics,
+  selectTopic,
   subscribeTopic,
   unsubscribeTopic,
 } from "../../slices/topicSlice";
@@ -27,6 +28,11 @@ const Topics = () => {
 
   const onUnsubscribe = (topic) => {
     dispatch(unsubscribeTopic({ email: userEmail, topicId: topic.topicId }));
+  };
+
+  const onTopicSelect = (topic) => {
+    dispatch(selectTopic(topic));
+    window.location.href = "/subscriptionDetails/" + topic.topicId;
   };
 
   useEffect(() => {
@@ -65,6 +71,7 @@ const Topics = () => {
                 key={index}
                 isSubscribed
                 onUnsubscribe={() => onUnsubscribe(topic)}
+                onTopicSelect={onTopicSelect}
               />
             ))}
           </div>

@@ -16,3 +16,19 @@ services:
     image: mongo:5.0.3
     ports:
       - "27017:27017"
+  rabitmq:
+    image: rabbitmq:3.8-management-alpine
+    ports:
+      - 5673:5672
+      - 15673:15672
+      - 61614:61613
+      - 15675:15674
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - rabbitmq_nodejs
+
+networks:
+  rabbitmq_nodejs:
+    driver: bridge

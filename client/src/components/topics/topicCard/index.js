@@ -25,10 +25,18 @@ function TopicCard({
   classes,
   onSubscribe,
   onUnsubscribe,
+  onTopicSelect,
 }) {
   if (!topic) return;
   return (
-    <Card className={classes.card}>
+    <Card
+      className={classes.card}
+      onClick={() => {
+        if (isSubscribed) {
+          onTopicSelect(topic);
+        }
+      }}
+    >
       <CardActionArea>
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
