@@ -10,10 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "EventEmitter": "^1.0.0",
     "fastify": "^3.21.5",
     "fastify-cors": "^6.0.2",
     "mongoose": "^6.0.7",
     "nodemon": "^2.0.12",
+    "socket.io": "^4.3.0",
+    "socket.io-client": "^4.3.1",
     "uuid": "^8.3.2"
   }
 }

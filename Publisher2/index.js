@@ -41,22 +41,15 @@ const api_calls = async () => {
     var countryRawData = await axios(configCountries);
     var leagueRawData = await axios(configLeagues);
   } catch {}
-  if (countryRawData != undefined && leagueRawData != undefined) {
-    getLeagueCountryData(countryRawData.data, leagueRawData.data);
-  }
+
+  getLeagueCountryData(countryRawData.data, leagueRawData.data);
 };
 
-var io = require("socket.io")(3000);
+var io = require("socket.io")(3001);
 io.on("connection", function (socket) {
   console.log("connected:", socket.client.id);
-  socket.on("serverEvent", function (data) {
-    console.log("new message from client:", data);
-  });
   setInterval(function () {
     api_calls();
-    console.log(leagueByCountry);
-    if (leagueByCountry.length > 0) {
-      socket.emit("publisher1", leagueByCountry);
-    }
-  }, 10000);
+    socket.emit("publisher2", "hello i am from publisher 2");
+  }, 5000);
 });
