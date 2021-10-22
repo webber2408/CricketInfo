@@ -2,6 +2,7 @@ const axios = require("axios");
 const CONFIG = require("./config.json");
 var leagueByCountry = {};
 var countryCodeMap = {};
+
 function getLeagueCountryData(countryRawData, leagueRawData) {
   leagueByCountry = {};
   countryCodeMap = {};
@@ -18,7 +19,6 @@ function getLeagueCountryData(countryRawData, leagueRawData) {
       leagueByCountry[country] = [league];
     }
   }
-  // return leagueByCountry;
 }
 
 const api_calls = async () => {
@@ -54,8 +54,13 @@ io.on("connection", function (socket) {
   });
   setInterval(function () {
     api_calls();
+    console.log(leagueByCountry);
     if (Object.keys(leagueByCountry).length > 0) {
-      socket.emit("publisher1", leagueByCountry);
+      let data_format = {
+        topicId: "d86e7021-b64e-442e-a905-fbca95d1544e",
+        topicData: leagueByCountry,
+      };
+      socket.emit("publisher1", data_format);
     }
   }, 10000);
 });
