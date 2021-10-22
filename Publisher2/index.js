@@ -58,11 +58,11 @@ socket.on("connect", function () {
     api_calls();
     console.log(leagueByCountry);
     if (Object.keys(leagueByCountry).length > 0) {
-      let data_format = {
-        topicId: "d86e7021-b64e-442e-a905-fbca95d1544e",
-        topicData: leagueByCountry,
-      };
-      socket.emit("publisher_push", data_format);
+      // let data_format = {
+      //   topicId: "d86e7021-b64e-442e-a905-fbca95d1544e",
+      //   topicData: leagueByCountry,
+      // };
+      socket.emit("publisher_push", Math.random());
     }
   }, 10000);
 });

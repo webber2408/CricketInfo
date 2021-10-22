@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-var io = require("socket.io-client");
+var io = require("socket.io")(3004);
 const fastify = require("fastify")({ logger: true });
 const SERVER_PORT = 5000;
 
@@ -60,14 +60,10 @@ const start = async () => {
 
 start();
 
-var socket = io.connect("http://localhost:3004/", {
-  reconnection: true,
-});
-
-socket.on("connect", function () {
-  console.log("connected to localhost:3004");
-  socket.on("publisher1", function (data) {
-    console.log("message from publisher 1:", data);
-    // socket.emit("serverEvent", "thanks server! for sending '" + data + "'");
+// Publisher Connection & Updation
+io.on("connection", function (socket) {
+  console.log("CONNECTED PUBLISHER => ", socket.client.id);
+  socket.on("publisher_push", (data) => {
+    console.log("PUBLISHER DATA", data);
   });
 });
