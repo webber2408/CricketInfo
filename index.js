@@ -71,16 +71,3 @@ socket.on("connect", function () {
     // socket.emit("serverEvent", "thanks server! for sending '" + data + "'");
   });
 });
-
-var io2 = require("socket.io-client");
-var socket2 = io2.connect("http://localhost:3001/", {
-  reconnection: true,
-});
-
-socket2.on("connect", function () {
-  console.log("connected to localhost:3001");
-  socket2.on("publisher2", function (data) {
-    console.log("message from the publisher 2:", data);
-    // socket.emit("serverEvent", "thanks server! for sending '" + data + "'");
-  });
-});

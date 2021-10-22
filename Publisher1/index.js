@@ -54,8 +54,7 @@ io.on("connection", function (socket) {
   });
   setInterval(function () {
     api_calls();
-    console.log(leagueByCountry);
-    if (leagueByCountry.length > 0) {
+    if (Object.keys(leagueByCountry).length > 0) {
       socket.emit("publisher1", leagueByCountry);
     }
   }, 10000);
