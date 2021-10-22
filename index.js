@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
-const path = require("path");
-const http = require("http");
-// const { v4: uuidv4 } = require('uuid');
+var io = require("socket.io-client");
 const fastify = require("fastify")({ logger: true });
 const SERVER_PORT = 5000;
 
@@ -26,9 +24,10 @@ fastify.get("/", (req, res) => {
 
 //MongoDB
 mongoose
-  .connect("mongodb://mongo:27017/cricketInfo", {
-    // ON DOCKER
-    // .connect("mongodb://localhost:27017/cricketInfo", { // ON LOCAL
+  // .connect("mongodb://mongo:27017/cricketInfo", {
+  // ON DOCKER
+  .connect("mongodb://localhost:27017/cricketInfo", {
+    // ON LOCAL
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -60,3 +59,15 @@ const start = async () => {
 };
 
 start();
+
+var socket = io.connect("http://localhost:3004/", {
+  reconnection: true,
+});
+
+socket.on("connect", function () {
+  console.log("connected to localhost:3004");
+  socket.on("publisher1", function (data) {
+    console.log("message from publisher 1:", data);
+    // socket.emit("serverEvent", "thanks server! for sending '" + data + "'");
+  });
+});
