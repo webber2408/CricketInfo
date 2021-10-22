@@ -58,10 +58,12 @@ var io = require("socket.io-client");
 var socket = io.connect("http://localhost:3004/", {
   reconnection: true,
 });
-socket.on("connect", function () {
+
+socket.on("connect", async () => {
   console.log("connected to localhost:3004");
 
   await api_calls();
+
   let finalArr = [];
 
   for (const [key, value] of Object.entries(countryCodeMap)) {
@@ -71,18 +73,30 @@ socket.on("connect", function () {
         countryName: value,
         countryTeams: teamsByCountry[value],
       };
-      let dataFormat = {
+      var dataFormat = {
         topicId: "d86e7021-b64e-442e-a905-fbca95d1544e",
         topicData: topicData,
+        isAdvertisement: false,
+      };
+      finalArr.push(dataFormat);
+      dataFormat = {
+        topicId: "d86e7021-b64e-442e-a905-fbca95d1544e",
+        topicData: topicData,
+        isAdvertisement: true,
       };
       finalArr.push(dataFormat);
     }
   }
-
   for (var i in finalArr) {
     let local = i;
-    setTimeout(function () {
-      socket.emit("publisher1", finalArr[local]);
-    }, local * 10000);
+    if (!finalArr[local].isAdvertisement) {
+      setTimeout(function () {
+        socket.emit("publisher_push", finalArr[local]);
+      }, local * 10000);
+    } else if (finalArr[local].isAdvertisement) {
+      setTimeout(function () {
+        socket.emit("publisher_push", "Testing that this is advertisement");
+      }, local * 1000);
+    }
   }
 });

@@ -55,14 +55,6 @@ var socket = io.connect("http://localhost:3004/", {
 socket.on("connect", function () {
   console.log("connected to localhost:3004");
   setInterval(function () {
-    api_calls();
-    console.log(leagueByCountry);
-    if (Object.keys(leagueByCountry).length > 0) {
-      // let data_format = {
-      //   topicId: "d86e7021-b64e-442e-a905-fbca95d1544e",
-      //   topicData: leagueByCountry,
-      // };
-      socket.emit("publisher_push", Math.random());
-    }
+    socket.emit("publisher_push", Math.random());
   }, 10000);
 });
