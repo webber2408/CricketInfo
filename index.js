@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-var io = require("socket.io")(3004);
+const io = require("socket.io")(3004);
 const fastify = require("fastify")({ logger: true });
 const SERVER_PORT = 5000;
 
