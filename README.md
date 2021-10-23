@@ -4,9 +4,9 @@
 
 This repository contains:
 
-- A shell script for executing the app.
 - A client folder.
-- Server files .
+- Server files.
+- 3 Publisher folders. 
 - Docker file.
 - Docker compose file for dockerizing all the three parts.
 
@@ -32,6 +32,7 @@ We will be publishing the app on Docker so that the app is platform independant 
 - Back-End Development : Node JS
 - Database: MongoDB
 - Deployment : Docker
+- Middleware : RabbitMQ
 
 ## Prerequisites:
 
@@ -51,8 +52,12 @@ We will be publishing the app on Docker so that the app is platform independant 
 - [react-scripts](https://www.npmjs.com/package/react-scripts)
 - [redux-thunk](https://github.com/reduxjs/redux-thunk)
 - [docker](https://www.docker.com/)
+- [socket.io](https://socket.io/)
+- [RabbitMQ](https://www.rabbitmq.com/)
 
 ## CurrentStatus 
+**3rd October,2021:** We have created a full architecture of 3 publishers and n number of subscribers that intercat with each other in our pub sub model. Our middleware is RabbitMQ which serves as queue to transfer messages from the broker node to the client. The client can subscribe to three subscriptions and the data will be displayed in his dashboard. Also there are advertisements that pop up in the middle in each topic that lets user know what other data is being displayed in other topics. The user is given the flexibility to turn of the adds and turn on the adds as he deems fit. The data transferred by the publisher to the broker is also being transferred to the database. The data is transferred into the database only when there is a change in the data, thus preventing replications. We have also provisioned that advertisements are not pushed in the database.
+
 **26th September,2021:** We have created a simple CRUD (Create,Read,Update,Delete) app that fetches the data from the database and gives us the relevant values.
 We have created a UI where a person is able to see the win percentage of a particular team by clicking on the respective cards. Five API's have been created to create this version.
 
@@ -63,33 +68,52 @@ We have created a UI where a person is able to see the win percentage of a parti
    #### Ports ####
    - Backend: 5000
    - MongoDb: 27017
+   - RabbitMq: 5672,15672,61613,15674
+   - Publisher1: 5001
+   - Publisher2: 5002
+   - Publisher3: 5003
+   - Websocket: 3004
    
    #### API's: ####
-   - **Add Match Details API:** (localhost:5000/api/cricket) This helps the user to add the details of a match. Also variious conditions have been put in place to                                  prevent addition of duplicate test cases.
-   - **Delete Match Details API:** (localhost:5000/api/cricket/945c2669-ef58-436b-bd41-2ae9c71d8a82) It deletes the match details for a particular key. Here key 
-                               is "945c2669-ef58-436b-bd41-2ae9c71d8a82". Since it is not a good practice to use a primary key as a key for API's we have created a                                unique match id key that is generate by the uuid library.
-   - **Update Match Details API:** (localhost:5000/api/cricket/e31cb520-c0d6-4827-b96c-81cc629b181e) It updates the match details for a particular key.The key                                       concept is same as above.
-   - **Get Match Details API:** (localhost:5000/api/cricket/all) It fetched the entire data from the database and shows that to user.
-   - **Get Team Statistics API:** (localhost:5000/api/cricket/teamStatistics) It fetched the entire data from the database. Then it calculates the win-lossratio                                of each team and sends the summary of this data to the UI where it is displayed in the form of a pie-chart.
-    
+     [SportMonks]https://docs.sportmonks.com/cricket/ : An external cricketing API was used to fetch relevant data for the subscriber.
+
+   #### Subscriptions: ####
+      - Number of teams in a country: It displays the number of teams in a country.(Uses two api's)
+      - Statistics of Team: Displays the win loss percentage of a team.(Uses two api's)
+      - Umpires per Country: Displays the number of umpires and count per country.(Uses two api's)
+      
    #### Database Schema: ####
     ```
-    const cricketSchema = new mongoose.Schema({
-          city: String,
-          date: String,
-          player_of_match: String,
-          team1: String,
-          team2: String,
-          winner: String,
-          matchId: String
-      });
-     ```
+   const userSchema = new mongoose.Schema({
+     name: String,
+     email: String,
+     password: String,
+     status: Number,
+     subscribedTopicIds: Array,
+     receiveAdvertisements: Boolean,
+   });
+   
+    ```
+    ```
+     const topicSchema = new mongoose.Schema({
+      topicName: String,
+      topicDescription: String,
+      topicId: String,
+      topicData: Array,
+      topicStatus: Number,
+    });
+    
+    ```
  ### Frontend Status: ###
   #### Ports ####
    - Frontend: 3000
   #### Features ####
-   - Creation of Add form to add match details.
-   - Display of team statistics from the Get Team Statistics API.
+   - A subscriber can create his profile on the page using email address.
+   - A user can login and check the subscriptions available.
+   - The user can subscribe or unsubscribe to the subscriptions.
+   - On clicking the subscribed topics the data will be visible along with advertisements. 
+   - User can opt out to recieve advertisements or opt in.
+
   #### Screenshots ####
    - UI Landing Page
  
@@ -117,16 +141,21 @@ We have created a UI where a person is able to see the win percentage of a parti
      
  
 ## Installation
-
-A shell script has been created to compile and run the app on docker. Please ensure that the docker is runnning before executing the script.
-
- ### Shell script working:
-   - The shell script calls the docker function to build the images for both the client and server.
-   - After this the docker-compose is called that builds the images of the mongoDb and fetches the images made in the above step. Then it creates a docker container and sequentially compiles the images and connects them so that data can flow between the three components.
-
-```sh
-$ sh start_application.sh
-```
+The following commands are executed from the root directory.
+ ```sh
+  cd client
+  docker build -t cricket-client .
+  cd ..
+  docker build -t cricket-api .
+  cd Publisher1
+  docker build -t cricket-api-publisher-1 .
+  cd ../Publisher2
+  docker build -t cricket-api-publisher-2 .
+  cd ../Publisher3
+  docker build -t cricket-api-publisher-3 .
+  cd ..
+  docker-compose up --remove-orphans
+ ```
 
 ## Contributors
 
