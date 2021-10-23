@@ -75,7 +75,7 @@ We have created a UI where a person is able to see the win percentage of a parti
    - Websocket: 3004
    
    #### API's: ####
-     [SportMonks](https://docs.sportmonks.com/cricket/) : An external cricketing API was used to fetch relevant data for the subscriber.
+   [SportMonks](https://docs.sportmonks.com/cricket/) : An external cricketing API was used to fetch relevant data for the subscriber.
 
    #### Subscriptions: ####
    - Number of teams in a country: It displays the number of teams in a country.(Uses two api's)
@@ -83,7 +83,7 @@ We have created a UI where a person is able to see the win percentage of a parti
    - Umpires per Country: Displays the number of umpires and count per country.(Uses two api's)
       
    #### Database Schema: ####
-    
+   - The user subscription data base.
    ```
    const userSchema = new mongoose.Schema({
      name: String,
@@ -95,6 +95,7 @@ We have created a UI where a person is able to see the win percentage of a parti
    });
    
    ```
+   - The topic data base.
    ```
      const topicSchema = new mongoose.Schema({
       topicName: String,
