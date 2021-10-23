@@ -78,13 +78,13 @@ We have created a UI where a person is able to see the win percentage of a parti
      [SportMonks](https://docs.sportmonks.com/cricket/) : An external cricketing API was used to fetch relevant data for the subscriber.
 
    #### Subscriptions: ####
-      - Number of teams in a country: It displays the number of teams in a country.(Uses two api's)
-      - Statistics of Team: Displays the win loss percentage of a team.(Uses two api's)
-      - Umpires per Country: Displays the number of umpires and count per country.(Uses two api's)
+   - Number of teams in a country: It displays the number of teams in a country.(Uses two api's)
+   - Statistics of Team: Displays the win loss percentage of a team.(Uses two api's)
+   - Umpires per Country: Displays the number of umpires and count per country.(Uses two api's)
       
    #### Database Schema: ####
     
-    ```sh
+   ```
    const userSchema = new mongoose.Schema({
      name: String,
      email: String,
@@ -93,6 +93,9 @@ We have created a UI where a person is able to see the win percentage of a parti
      subscribedTopicIds: Array,
      receiveAdvertisements: Boolean,
    });
+   
+   ```
+   ```
      const topicSchema = new mongoose.Schema({
       topicName: String,
       topicDescription: String,
@@ -100,8 +103,9 @@ We have created a UI where a person is able to see the win percentage of a parti
       topicData: Array,
       topicStatus: Number,
     });
+   ```
     
-    ```
+
  ### Frontend Status: ###
   #### Ports ####
    - Frontend: 3000
