@@ -27,8 +27,8 @@ We will be publishing the app on Docker so that the app is platform independant 
 
 ## WebStack
 
-- Front-End Development: React JS
-- Back-End Development : Node JS
+- Front-End Development: React, Redux, Web Stomp, Web Socket
+- Back-End Development : Node JS, socket-io, mongoose
 - Database: MongoDB
 - Deployment : Docker
 - Middleware : RabbitMQ
