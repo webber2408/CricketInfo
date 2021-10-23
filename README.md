@@ -83,7 +83,8 @@ We have created a UI where a person is able to see the win percentage of a parti
       - Umpires per Country: Displays the number of umpires and count per country.(Uses two api's)
       
    #### Database Schema: ####
-    ```
+    
+    ```sh
    const userSchema = new mongoose.Schema({
      name: String,
      email: String,
@@ -92,7 +93,6 @@ We have created a UI where a person is able to see the win percentage of a parti
      subscribedTopicIds: Array,
      receiveAdvertisements: Boolean,
    });
-  
      const topicSchema = new mongoose.Schema({
       topicName: String,
       topicDescription: String,
