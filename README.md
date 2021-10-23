@@ -59,10 +59,10 @@ We will be publishing the app on Docker so that the app is platform independant 
 **3rd October,2021:** We have created a full architecture of 3 publishers and n number of subscribers that interact with each other in our pub sub model. Our middleware is RabbitMQ which serves as queue to transfer messages from the broker node to the client. The client can subscribe to three subscriptions and the data will be displayed in his dashboard. Also there are advertisements that pop up in the middle in each topic that lets user know what other data is being displayed in other topics. The user is given the flexibility to turn off or on the adds as he deems fit. The data transferred by the publisher to the broker is also being transferred to the database. The data is transferred into the database only when there is a change in the data, thus preventing replications. We have also provisioned that advertisements are not pushed in the database.
 
  ### Architectural Model
- ![](screenshots/clientServerInteraction.png)
+ ![](screenshots/architecture.png)
  
   ### Algorithm Workflow
- ![](screenshots/clientServerInteraction.png)
+ ![](screenshots/flowchart.png)
 
 **26th September,2021:** We have created a simple CRUD (Create,Read,Update,Delete) app that fetches the data from the database and gives us the relevant values.
 We have created a UI where a person is able to see the win percentage of a particular team by clicking on the respective cards. Five API's have been created to create this version.
