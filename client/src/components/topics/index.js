@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAvailableTopics,
   getMyTopics,
+  resetSelectedTopicData,
   selectTopic,
   subscribeTopic,
   unsubscribeTopic,
@@ -31,6 +32,7 @@ const Topics = () => {
   };
 
   const onTopicSelect = (topic) => {
+    dispatch(resetSelectedTopicData());
     dispatch(selectTopic(topic));
     window.location.href = "/subscriptionDetails/" + topic.topicId;
   };

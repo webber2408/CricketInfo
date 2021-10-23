@@ -1,6 +1,15 @@
 const axios = require("axios");
 const CONFIG = require("./config.json");
 const _ = require("lodash");
+const express = require("express");
+
+const PORT = 5003;
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("Hello from Publisher-3");
+});
+
 var officialsByCountry = {
   // india: [],
 };
@@ -60,49 +69,56 @@ const api_calls = async () => {
 };
 
 var io = require("socket.io-client");
-var socket = io.connect("http://localhost:3004/", {
-  reconnection: true,
-});
 
-socket.on("connect", async () => {
-  console.log("connected to localhost:3004");
+app.listen(PORT, () => {
+  console.log(`Publisher 3 started on port: ${PORT}`);
 
-  await api_calls();
+  var socket = io.connect("http://cricket-api:3004/", {
+    // DOCKER
+    // var socket = io.connect("http://localhost:3004/", { // LOCAL
+    reconnection: true,
+  });
 
-  let finalArr = [];
+  socket.on("connect", async () => {
+    console.log("connected to cricket-api:3004");
 
-  for (const [key, value] of Object.entries(countryCodeMap)) {
-    if (Object.keys(officialsByCountry).find((x) => x == value)) {
-      let topicData = {
-        countryId: key,
-        countryName: value,
-        officials: officialsByCountry[value],
-        noOfOfficials: officialsByCountry[value].length,
-      };
-      var dataFormat = {
-        topicId: "d86e7021-b64e-442e-a905-fbca95d1544e",
-        topicData: topicData,
-        isAdvertisement: false,
-      };
-      finalArr.push(dataFormat);
-      dataFormat = {
-        topicId: "d86e7021-b64e-442e-a905-fbca95d1544e",
-        topicData: topicData,
-        isAdvertisement: true,
-      };
-      finalArr.push(dataFormat);
+    await api_calls();
+
+    let finalArr = [];
+
+    for (const [key, value] of Object.entries(countryCodeMap)) {
+      if (Object.keys(officialsByCountry).find((x) => x == value)) {
+        let topicData = {
+          countryId: key,
+          countryName: value,
+          officials: officialsByCountry[value],
+          noOfOfficials: officialsByCountry[value].length,
+        };
+        var dataFormat = {
+          topicId: "352ab6b4-166b-4e5c-83b7-7f64f20254f3",
+          topicData: topicData,
+          isAdvertisement: false,
+        };
+        finalArr.push(dataFormat);
+        dataFormat = {
+          topicId: "352ab6b4-166b-4e5c-83b7-7f64f20254f3",
+          topicData: topicData,
+          isAdvertisement: true,
+        };
+        finalArr.push(dataFormat);
+      }
     }
-  }
-  for (var i in finalArr) {
-    let local = i;
-    if (!finalArr[local].isAdvertisement) {
-      setTimeout(function () {
-        socket.emit("publisher_push", finalArr[local]);
-      }, local * 10000);
-    } else if (finalArr[local].isAdvertisement) {
-      setTimeout(function () {
-        socket.emit("publisher_push", "Testing that this is advertisement");
-      }, local * 40000);
+    for (var i = 0; i < finalArr.length + 100; i++) {
+      let local = i % finalArr.length;
+      if (!finalArr[local].isAdvertisement) {
+        setTimeout(function () {
+          socket.emit("publisher_push", finalArr[local]);
+        }, local * 4000);
+      } else if (finalArr[local].isAdvertisement) {
+        setTimeout(function () {
+          socket.emit("publisher_push", finalArr[local]);
+        }, local * 1000);
+      }
     }
-  }
+  });
 });

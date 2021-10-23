@@ -1,22 +1,5 @@
 version: "3"
 services:
-  cricket-client:
-    image: cricket-client
-    stdin_open: true
-    ports:
-      - "3000:3000"
-  cricket-api:
-    image: cricket-api
-    stdin_open: true
-    ports:
-      - "5000:5000"
-    depends_on:
-      - mongo
-      - rabbitmq
-  mongo:
-    image: mongo:5.0.3
-    ports:
-      - "27017:27017"
   rabbitmq:
     image: rabbitmq:3.8-management-alpine
     ports:
@@ -27,3 +10,42 @@ services:
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+  mongo:
+    image: mongo:5.0.3
+    ports:
+      - "27017:27017"
+  cricket-client:
+    image: cricket-client
+    stdin_open: true
+    ports:
+      - "3000:3000"
+  cricket-api:
+    image: cricket-api
+    stdin_open: true
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+      - rabbitmq
+  cricket-api-publisher-1:
+    image: cricket-api-publisher-1
+    stdin_open: true
+    ports:
+      - "5001:5001"
+    depends_on:
+      - cricket-api
+  cricket-api-publisher-2:
+    image: cricket-api-publisher-2
+    stdin_open: true
+    ports:
+      - "5002:5002"
+    depends_on:
+      - cricket-api
+  cricket-api-publisher-3:
+    image: cricket-api-publisher-3
+    stdin_open: true
+    ports:
+      - "5003:5003"
+    depends_on:
+      - cricket-api

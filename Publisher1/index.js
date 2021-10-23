@@ -1,6 +1,15 @@
 const axios = require("axios");
 const CONFIG = require("./config.json");
 const _ = require("lodash");
+const express = require("express");
+
+const PORT = 5001;
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("Hello from Publisher-1");
+});
+
 var teamsByCountry = {
   // india: [],
 };
@@ -55,48 +64,56 @@ const api_calls = async () => {
 };
 
 var io = require("socket.io-client");
-var socket = io.connect("http://localhost:3004/", {
-  reconnection: true,
-});
 
-socket.on("connect", async () => {
-  console.log("connected to localhost:3004");
+app.listen(PORT, () => {
+  console.log(`Publisher 1 started on port: ${PORT}`);
+  var socket = io.connect("http://cricket-api:3004/", {
+    // DOCKER
+    // var socket = io.connect("http://localhost:3004/", { // LOCAL
+    reconnection: true,
+  });
 
-  await api_calls();
+  console.log("SOCKET RAHUL", socket);
 
-  let finalArr = [];
+  socket.on("connect", async () => {
+    console.log("connected to cricket-api:3004");
 
-  for (const [key, value] of Object.entries(countryCodeMap)) {
-    if (Object.keys(teamsByCountry).find((x) => x == value)) {
-      let topicData = {
-        countryId: key,
-        countryName: value,
-        countryTeams: teamsByCountry[value],
-      };
-      var dataFormat = {
-        topicId: "f3e81ebf-f00b-4cbf-9bc6-5bc4c93dafaf",
-        topicData: topicData,
-        isAdvertisement: false,
-      };
-      finalArr.push(dataFormat);
-      dataFormat = {
-        topicId: "f3e81ebf-f00b-4cbf-9bc6-5bc4c93dafaf",
-        topicData: topicData,
-        isAdvertisement: true,
-      };
-      finalArr.push(dataFormat);
+    await api_calls();
+
+    let finalArr = [];
+
+    for (const [key, value] of Object.entries(countryCodeMap)) {
+      if (Object.keys(teamsByCountry).find((x) => x == value)) {
+        let topicData = {
+          countryId: key,
+          countryName: value,
+          countryTeams: teamsByCountry[value],
+        };
+        var dataFormat = {
+          topicId: "df20ba71-3114-46b1-845e-1d7f81e84c11",
+          topicData: topicData,
+          isAdvertisement: false,
+        };
+        finalArr.push(dataFormat);
+        dataFormat = {
+          topicId: "df20ba71-3114-46b1-845e-1d7f81e84c11",
+          topicData: topicData,
+          isAdvertisement: true,
+        };
+        finalArr.push(dataFormat);
+      }
     }
-  }
-  for (var i in finalArr) {
-    let local = i;
-    if (!finalArr[local].isAdvertisement) {
-      setTimeout(function () {
-        socket.emit("publisher_push", finalArr[local]);
-      }, local * 4000);
-    } else if (finalArr[local].isAdvertisement) {
-      setTimeout(function () {
-        socket.emit("publisher_push", finalArr[local]);
-      }, local * 1000);
+    for (var i = 0; i < finalArr.length + 100; i++) {
+      let local = i % finalArr.length;
+      if (!finalArr[local].isAdvertisement) {
+        setTimeout(function () {
+          socket.emit("publisher_push", finalArr[local]);
+        }, local * 4000);
+      } else if (finalArr[local].isAdvertisement) {
+        setTimeout(function () {
+          socket.emit("publisher_push", finalArr[local]);
+        }, local * 1000);
+      }
     }
-  }
+  });
 });

@@ -1,6 +1,15 @@
 const axios = require("axios");
 const CONFIG = require("./config.json");
 const _ = require("lodash");
+const express = require("express");
+
+const PORT = 5002;
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("Hello from Publisher-2");
+});
+
 var winLossPercentage = {
   // india: winloss,
 };
@@ -54,45 +63,52 @@ const api_calls = async () => {
 };
 
 var io = require("socket.io-client");
-var socket = io.connect("http://localhost:3004/", {
-  reconnection: true,
-});
 
-socket.on("connect", async () => {
-  console.log("connected to localhost:3004");
+app.listen(PORT, () => {
+  console.log(`Publisher 2 started on port: ${PORT}`);
 
-  await api_calls();
+  var socket = io.connect("http://cricket-api:3004/", {
+    // DOCKER
+    // var socket = io.connect("http://localhost:3004/", { // LOCAL
+    reconnection: true,
+  });
 
-  let finalArr = [];
+  socket.on("connect", async () => {
+    console.log("connected to cricket-api:3004");
 
-  for (const [key, value] of Object.entries(winLossPercentage)) {
-    let topicData = {
-      teamName: key,
-      winLossPercentage: value,
-    };
-    var dataFormat = {
-      topicId: "d86e7021-b64e-442e-a905-fbca95d1544e",
-      topicData: topicData,
-      isAdvertisement: false,
-    };
-    finalArr.push(dataFormat);
-    dataFormat = {
-      topicId: "d86e7021-b64e-442e-a905-fbca95d1544e",
-      topicData: topicData,
-      isAdvertisement: true,
-    };
-    finalArr.push(dataFormat);
-  }
-  for (var i in finalArr) {
-    let local = i;
-    if (!finalArr[local].isAdvertisement) {
-      setTimeout(function () {
-        socket.emit("publisher_push", finalArr[local]);
-      }, local * 10000);
-    } else if (finalArr[local].isAdvertisement) {
-      setTimeout(function () {
-        socket.emit("publisher_push", finalArr[local]);
-      }, local * 40000);
+    await api_calls();
+
+    let finalArr = [];
+
+    for (const [key, value] of Object.entries(winLossPercentage)) {
+      let topicData = {
+        teamName: key,
+        winLossPercentage: value,
+      };
+      var dataFormat = {
+        topicId: "f108e891-3b66-408e-8f41-c689109a063f",
+        topicData: topicData,
+        isAdvertisement: false,
+      };
+      finalArr.push(dataFormat);
+      dataFormat = {
+        topicId: "f108e891-3b66-408e-8f41-c689109a063f",
+        topicData: topicData,
+        isAdvertisement: true,
+      };
+      finalArr.push(dataFormat);
     }
-  }
+    for (var i = 0; i < finalArr.length + 100; i++) {
+      let local = i % finalArr.length;
+      if (!finalArr[local].isAdvertisement) {
+        setTimeout(function () {
+          socket.emit("publisher_push", finalArr[local]);
+        }, local * 4000);
+      } else if (finalArr[local].isAdvertisement) {
+        setTimeout(function () {
+          socket.emit("publisher_push", finalArr[local]);
+        }, local * 1000);
+      }
+    }
+  });
 });

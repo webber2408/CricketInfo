@@ -29,9 +29,9 @@ fastify.get("/", (req, res) => {
 
 //MongoDB
 mongoose
-  // .connect("mongodb://mongo:27017/cricketInfo", {
-  // ON DOCKER
-  .connect("mongodb://localhost:27017/cricketInfo", {
+  .connect("mongodb://mongo:27017/cricketInfo", {
+    // ON DOCKER
+    // .connect("mongodb://localhost:27017/cricketInfo", {
     // ON LOCAL
     useNewUrlParser: true,
     useUnifiedTopology: true,

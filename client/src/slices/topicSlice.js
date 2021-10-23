@@ -93,6 +93,9 @@ export const topic = createSlice({
     addSelectedTopicData: (state, { payload }) => {
       state.selectedTopicData = payload;
     },
+    resetSelectedTopicData: (state) => {
+      state.selectedTopicData = null;
+    },
     addAdvertisement: (state, { payload }) => {
       state.advertisement = payload;
     },
@@ -118,5 +121,6 @@ export const {
   addSelectedTopicData,
   addAdvertisement,
   resetAdvertisement,
+  resetSelectedTopicData,
 } = topic.actions;
 export default topic.reducer;
