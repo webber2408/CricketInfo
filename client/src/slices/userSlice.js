@@ -14,6 +14,22 @@ export const getUserProfile = createAsyncThunk(
   }
 );
 
+export const toggleAdvertisement = createAsyncThunk(
+  "cricket/toggleAdvertisement",
+  async (data, thunkApi) => {
+    const response = await api.get(
+      "/user/ads/toggle?email=" + data.email + "&ads=" + data.value
+    );
+    if (response.status !== 200) {
+      return thunkApi.rejectWithValue({
+        errorMessage: "Error toggling the advertisement status",
+      });
+    }
+    localStorage.setItem("showAds", data.value);
+    return;
+  }
+);
+
 export const user = createSlice({
   name: "user",
   initialState: {},

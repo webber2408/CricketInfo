@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
   password: String,
   status: Number,
   subscribedTopicIds: Array,
+  receiveAdvertisements: Boolean,
 });
 
 module.exports = mongoose.model("User", userSchema);

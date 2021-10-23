@@ -10,7 +10,7 @@ const getGlobalConnection = () => {
 const publishMessage = async (topicId, message) => {
   let { connection, channel } = getGlobalConnection();
   if (!connection || !channel) {
-    connection = await amqplib.connect("amqp://localhost:5673", "heartbeat=60"); // ON LOCAL
+    connection = await amqplib.connect("amqp://localhost:5672", "heartbeat=60"); // ON LOCAL
     // connection = await amqplib.connect(
     //   "amqp://guest:guest@rabbitmq:5672", // ON DOCKER
     //   "heartbeat=60"

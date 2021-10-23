@@ -29,6 +29,7 @@ const login = async (req, res) => {
       message: "User logged in successfully",
       token: token,
       email: userEmail,
+      showAds: user[0].receiveAdvertisements,
     };
   } catch (err) {
     console.error("login failed ", err);
@@ -43,6 +44,7 @@ const register = async (req, res) => {
   try {
     const toSaveUser = req.body;
     toSaveUser.status = 1; // 1 -> Active 2 -> Inactive
+    toSaveUser.receiveAdvertisements = true;
     if (!toSaveUser.email || !toSaveUser.password || !toSaveUser.name) {
       return {
         success: 404,

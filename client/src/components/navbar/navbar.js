@@ -43,6 +43,9 @@ const Navbar = () => {
   const isDashboard = window.location.pathname == "/dashboard";
   const isProfile = window.location.pathname == "/profile";
   const isTopics = window.location.pathname == "/subscriptions";
+  const isSubscriptionsPage = window.location.pathname.includes(
+    "/subscriptionDetails"
+  );
 
   const toggleDrawer = (open) => setIsDrawerOpen(open);
 
@@ -108,7 +111,11 @@ const Navbar = () => {
       </SwipeableDrawer>
       <nav>
         <ul>
-          {(isDashboard || isProfile || isTopics || isAdmin) && (
+          {(isDashboard ||
+            isProfile ||
+            isTopics ||
+            isAdmin ||
+            isSubscriptionsPage) && (
             <li>
               <Button
                 variant="outlined"

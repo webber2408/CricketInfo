@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 var io = require("socket.io")(3004);
 const fastify = require("fastify")({ logger: true });
+const PublishHelper = require("./src/publishHelper/publishHelper");
+
 const SERVER_PORT = 5000;
 
 //CORS
@@ -11,6 +13,9 @@ fastify.register(require("fastify-cors"), {
 
 //Routes
 const routes = require("./routes/route.js");
+const {
+  addTopicDataAndPublish,
+} = require("./src/controller/topicController.js");
 
 Object.values(routes).forEach((item) => {
   item.forEach((route) => {
@@ -63,7 +68,16 @@ start();
 // Publisher Connection & Updation
 io.on("connection", function (socket) {
   console.log("CONNECTED PUBLISHER => ", socket.client.id);
-  socket.on("publisher_push", (data) => {
-    console.log("PUBLISHER DATA", data);
+  socket.on("publisher_push", ({ topicId, topicData, isAdvertisement }) => {
+    console.log("PUBLISHER DATA", topicData);
+    if (!isAdvertisement) {
+      addTopicDataAndPublish(topicId, topicData);
+    } else {
+      // console.log("HERE");
+      PublishHelper.publishMessage("advertisement", {
+        ...topicData,
+        isAdvertisement,
+      });
+    }
   });
 });

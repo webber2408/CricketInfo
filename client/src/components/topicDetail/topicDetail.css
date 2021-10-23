@@ -1,0 +1,29 @@
+.topicDetail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.topicDetail__heading {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid rgb(112, 112, 112);
+  color: rgb(112, 112, 112);
+}
+
+.newTopic {
+  width: 90%;
+  background-color: aliceblue;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.newTopic__heading {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-bottom: 20px;
+}

@@ -51,6 +51,11 @@ const userRoutes = [
     url: "/api/user/profile",
     handler: UserController.getUserProfile,
   },
+  {
+    method: "GET",
+    url: "/api/user/ads/toggle",
+    handler: UserController.toggleAdvertisements,
+  },
 ];
 
 const topicRoutes = [

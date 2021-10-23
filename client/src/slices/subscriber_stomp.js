@@ -1,13 +1,27 @@
 import Stomp from "stompjs";
 import store from "../store";
-import { addSelectedTopicData } from "./topicSlice";
+import { addSelectedTopicData, addAdvertisement } from "./topicSlice";
 
-export function subscribeToTopic(topicId) {
+export function subscribeToTopic(topicId, isAdvertisement, callback) {
   var ws = new WebSocket("ws://localhost:15674/ws");
-  let stompClient = Stomp.over(ws);
+  var stompClient = Stomp.over(ws);
   stompClient.connect({}, function () {
-    stompClient.subscribe("queue." + topicId, function (message) {
-      store.dispatch(addSelectedTopicData(message.body));
-    });
+    if (!isAdvertisement) {
+      stompClient.subscribe("queue." + topicId, function (message) {
+        store.dispatch(addSelectedTopicData(message.body));
+        if (callback) callback();
+      });
+    } else {
+      stompClient.subscribe("queue.advertisement", function (message) {
+        store.dispatch(addAdvertisement(JSON.parse(message.body)));
+        if (callback) callback();
+      });
+    }
   });
 }
+
+// export function unsubscribeToTopic(topicId, isAdvertisement) {
+//   if (isAdvertisement) {
+//     stompClient.unsubscribe("queue.advertisement");
+//   }
+// }

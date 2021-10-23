@@ -74,13 +74,13 @@ socket.on("connect", async () => {
         countryTeams: teamsByCountry[value],
       };
       var dataFormat = {
-        topicId: "d86e7021-b64e-442e-a905-fbca95d1544e",
+        topicId: "f3e81ebf-f00b-4cbf-9bc6-5bc4c93dafaf",
         topicData: topicData,
         isAdvertisement: false,
       };
       finalArr.push(dataFormat);
       dataFormat = {
-        topicId: "d86e7021-b64e-442e-a905-fbca95d1544e",
+        topicId: "f3e81ebf-f00b-4cbf-9bc6-5bc4c93dafaf",
         topicData: topicData,
         isAdvertisement: true,
       };
@@ -92,10 +92,10 @@ socket.on("connect", async () => {
     if (!finalArr[local].isAdvertisement) {
       setTimeout(function () {
         socket.emit("publisher_push", finalArr[local]);
-      }, local * 10000);
+      }, local * 4000);
     } else if (finalArr[local].isAdvertisement) {
       setTimeout(function () {
-        socket.emit("publisher_push", "Testing that this is advertisement");
+        socket.emit("publisher_push", finalArr[local]);
       }, local * 1000);
     }
   }

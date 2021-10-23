@@ -20,6 +20,7 @@ export const login = createAsyncThunk(
       localStorage.setItem("TOKEN", response.data.token);
     }
     localStorage.setItem("USER_EMAIL", response.data?.email);
+    localStorage.setItem("showAds", response.data?.showAds);
     return await response.data;
   }
 );

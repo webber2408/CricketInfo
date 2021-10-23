@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const Topic = require("../model/topic");
 const User = require("../model/user");
+const PublishHelper = require("../publishHelper/publishHelper");
 
 const getAllTopics = async (req, res) => {
   try {
@@ -112,6 +113,70 @@ const addTopic = async (req, res) => {
   }
 };
 
+// PUBLISH
+const addTopicDataAndPublish = async (topicId, topicData) => {
+  try {
+    if (!topicId || !topicData) return;
+    const existingTopic = await Topic.find({
+      topicId: topicId,
+    }).exec();
+    if (!existingTopic[0]) return;
+
+    let existingDataString = JSON.stringify(existingTopic[0].topicData);
+    let toAddDataString = JSON.stringify(topicData);
+
+    if (existingDataString.includes(toAddDataString)) {
+      // NO UPDATION REQUIRED
+      console.log("====================================");
+      console.log("NO NEW UPDATE FOUND");
+      console.log("====================================");
+      return;
+    }
+
+    const query = await Topic.findOneAndUpdate(
+      {
+        topicId: topicId,
+      },
+      {
+        $push: {
+          topicData: {
+            ...topicData,
+          },
+        },
+      }
+    );
+    if (query) {
+      console.log("====================================");
+      console.log("NEW UPDATE, PUSHED TO DB & PUBLISHED");
+      console.log("====================================");
+
+      let toPublishItem = {
+        topicId: existingTopic[0].topicId,
+        topicName: existingTopic[0].topicName,
+        newData: topicData,
+      };
+
+      PublishHelper.publishMessage(toPublishItem.topicId, toPublishItem);
+
+      return {
+        success: 200,
+        message: "Topic data updated successfully",
+      };
+    } else {
+      return {
+        success: 500,
+        message: "Error adding topic data",
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      success: 500,
+      message: "Error adding topic data",
+    };
+  }
+};
+
 const subscribeToTopic = async (req, res) => {
   try {
     const { topicId, userEmail } = req.params;
@@ -198,4 +263,5 @@ module.exports = {
   unsubscribeToTopic,
   getAllAvailableTopics,
   getUserTopics,
+  addTopicDataAndPublish,
 };
