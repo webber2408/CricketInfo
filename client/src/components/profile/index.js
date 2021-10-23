@@ -9,17 +9,20 @@ import "./profile.css";
 const Profile = () => {
   const dispatch = useDispatch();
   const [adsVisible, setAdsVisible] = useState(
-    localStorage.getItem("showAds") == "true"
+    sessionStorage.getItem("showAds") == "true"
   );
   const [user, setUser] = useState(null);
 
-  if (!localStorage.getItem("USER_EMAIL") || !localStorage.getItem("TOKEN")) {
-    localStorage.removeItem("TOKEN");
+  if (
+    !sessionStorage.getItem("USER_EMAIL") ||
+    !sessionStorage.getItem("TOKEN")
+  ) {
+    sessionStorage.removeItem("TOKEN");
     window.location.href = "/";
   }
 
   useEffect(() => {
-    dispatch(getUserProfile(localStorage.getItem("USER_EMAIL"))).then(
+    dispatch(getUserProfile(sessionStorage.getItem("USER_EMAIL"))).then(
       ({ payload }) => {
         if (payload.email) {
           setUser(payload);
@@ -31,7 +34,7 @@ const Profile = () => {
   const stopAds = () => {
     dispatch(
       toggleAdvertisement({
-        email: localStorage.getItem("USER_EMAIL"),
+        email: sessionStorage.getItem("USER_EMAIL"),
         value: false,
       })
     );
@@ -42,7 +45,7 @@ const Profile = () => {
   const startAds = () => {
     dispatch(
       toggleAdvertisement({
-        email: localStorage.getItem("USER_EMAIL"),
+        email: sessionStorage.getItem("USER_EMAIL"),
         value: true,
       })
     );

@@ -77,7 +77,7 @@ const Navbar = () => {
         <ListItem
           button
           onClick={() => {
-            localStorage.removeItem("TOKEN");
+            sessionStorage.removeItem("TOKEN");
             window.location.href = "/";
           }}
         >

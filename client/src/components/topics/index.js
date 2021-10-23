@@ -17,9 +17,12 @@ const Topics = () => {
   const dispatch = useDispatch();
   const availableTopics = useSelector((state) => state.topic.availableTopics);
   const myTopics = useSelector((state) => state.topic.myTopics);
-  const userEmail = localStorage.getItem("USER_EMAIL");
+  const userEmail = sessionStorage.getItem("USER_EMAIL");
 
-  if (!localStorage.getItem("TOKEN") || !localStorage.getItem("USER_EMAIL")) {
+  if (
+    !sessionStorage.getItem("TOKEN") ||
+    !sessionStorage.getItem("USER_EMAIL")
+  ) {
     window.location.href = "/";
   }
 

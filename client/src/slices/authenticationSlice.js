@@ -17,10 +17,10 @@ export const login = createAsyncThunk(
       });
     }
     if (response.data && response.data.token) {
-      localStorage.setItem("TOKEN", response.data.token);
+      sessionStorage.setItem("TOKEN", response.data.token);
     }
-    localStorage.setItem("USER_EMAIL", response.data?.email);
-    localStorage.setItem("showAds", response.data?.showAds);
+    sessionStorage.setItem("USER_EMAIL", response.data?.email);
+    sessionStorage.setItem("showAds", response.data?.showAds);
     return await response.data;
   }
 );

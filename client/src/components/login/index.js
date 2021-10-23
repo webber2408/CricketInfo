@@ -17,7 +17,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const [formValues, setFormValues] = useState(defaultValues);
 
-  if (localStorage.getItem("TOKEN") && localStorage.getItem("USER_EMAIL")) {
+  if (sessionStorage.getItem("TOKEN") && sessionStorage.getItem("USER_EMAIL")) {
     window.location.href = "/dashboard";
   }
 

@@ -10,7 +10,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const matchStats = useSelector((state) => state.cricket.matchStats);
 
-  if (!localStorage.getItem("TOKEN")) {
+  if (!sessionStorage.getItem("TOKEN")) {
     window.location.href = "/";
   }
 

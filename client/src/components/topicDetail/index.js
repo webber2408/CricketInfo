@@ -20,11 +20,14 @@ const TopicDetail = () => {
   const topicLiveData = useSelector((state) =>
     JSON.parse(state.topic.selectedTopicData)
   );
-  const userEmail = localStorage.getItem("USER_EMAIL");
+  const userEmail = sessionStorage.getItem("USER_EMAIL");
   const advertisement = useSelector((state) => state.topic.advertisement);
 
-  if (!localStorage.getItem("USER_EMAIL") || !localStorage.getItem("TOKEN")) {
-    localStorage.removeItem("TOKEN");
+  if (
+    !sessionStorage.getItem("USER_EMAIL") ||
+    !sessionStorage.getItem("TOKEN")
+  ) {
+    sessionStorage.removeItem("TOKEN");
     window.location.href = "/";
   }
 
@@ -86,7 +89,7 @@ const TopicDetail = () => {
         })}
       <br />
       <br />
-      {advertisement && localStorage.getItem("showAds") == "true" && (
+      {advertisement && sessionStorage.getItem("showAds") == "true" && (
         <div className="newTopic" style={{ backgroundColor: "#dedede" }}>
           {Object.entries(advertisement).map((entry) => {
             return (

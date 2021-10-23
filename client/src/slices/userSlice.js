@@ -25,7 +25,7 @@ export const toggleAdvertisement = createAsyncThunk(
         errorMessage: "Error toggling the advertisement status",
       });
     }
-    localStorage.setItem("showAds", data.value);
+    sessionStorage.setItem("showAds", data.value);
     return;
   }
 );

@@ -17,7 +17,7 @@ const Register = () => {
   const dispatch = useDispatch();
   const [formValues, setFormValues] = useState(defaultValues);
 
-  if (localStorage.getItem("TOKEN")) {
+  if (sessionStorage.getItem("TOKEN")) {
     window.location.href = "/dashboard";
   }
 
