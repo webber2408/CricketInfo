@@ -86,13 +86,13 @@ app.listen(PORT, () => {
         winLossPercentage: value,
       };
       var dataFormat = {
-        topicId: "f108e891-3b66-408e-8f41-c689109a063f",
+        topicId: "e296ce0a-d87d-48c9-89ac-f7e40fbbbef6",
         topicData: topicData,
         isAdvertisement: false,
       };
       finalArr.push(dataFormat);
       dataFormat = {
-        topicId: "f108e891-3b66-408e-8f41-c689109a063f",
+        topicId: "e296ce0a-d87d-48c9-89ac-f7e40fbbbef6",
         topicData: topicData,
         isAdvertisement: true,
       };
