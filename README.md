@@ -175,7 +175,7 @@ Rabbit MQ running queues for 3 topics and one advertisement that gets data from 
   
 - Topic 3: Umpires By Country
 
-  ![](client/screenshots/8_UmpiresByCountry.png)
+  ![](screenshots/8_UmpiresByCountry.png)
   
 - Advertisement button toggle
 
