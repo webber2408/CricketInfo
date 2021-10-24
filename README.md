@@ -127,7 +127,7 @@ Rabbit MQ running queues for 3 topics and one advertisement that gets data from 
 ![](screenshots/11_RabbitMQ.png)
 
 ### Docker Deployment
-![](screenshots/11_docker.png)
+![](screenshots/9_docker.png)
 
 ### Frontend Status:
 
@@ -173,7 +173,7 @@ Rabbit MQ running queues for 3 topics and one advertisement that gets data from 
 
   ![](screenshots/7_StatsOfTeams.png)
   
-- Topic 3: Umbires By Country
+- Topic 3: Umpires By Country
 
   ![](client/screenshots/8_UmpiresOfCountry.png)
   
