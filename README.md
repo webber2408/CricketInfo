@@ -147,31 +147,31 @@ Rabbit MQ running queues for 3 topics and one advertisement that gets data from 
 
 - New user registration
 
-  ![](client/screenshots/1_Register.png)
+  ![](screenshots/1_Register.png)
 
 - Logging the new user in
 
-  ![](client/screenshots/2_Login.png)
+  ![](screenshots/2_Login.png)
 
 - Main landing page
 
-  ![](client/screenshots/3_Menu.png)
+  ![](screenshots/3_Menu.png)
 
 - Showing topics that the user can subscribe to
 
-  ![](client/screenshots/4_AvailableSubs.png)
+  ![](screenshots/4_AvailableSubs.png)
 
 - Showing the users subscription.
 
-  ![](client/screenshots/5_YourSubs.png)
+  ![](screenshots/5_YourSubs.png)
 
 - Going to the subscription page of topic one (Teams available in a country) where you can see advertisements and its unsubscribe button
 
-  ![](client/screenshots/6_SubscriptionPage.png)
+  ![](screenshots/6_SubscriptionPage.png)
 
 - Topic 2: Team Win Statistics
 
-  ![](client/screenshots/7_StatsOfTeams.png)
+  ![](screenshots/7_StatsOfTeams.png)
   
 - Topic 3: Umbires By Country
 
@@ -179,7 +179,7 @@ Rabbit MQ running queues for 3 topics and one advertisement that gets data from 
   
 - Advertisement button toggle
 
-  ![](client/screenshots/10_Profile.png)
+  ![](screenshots/10_Profile.png)
 
 ## Installation
 
