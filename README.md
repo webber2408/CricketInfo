@@ -8,7 +8,7 @@ This repository contains:
 - Server files.
 - 3 Publisher folders.
 - Docker file.
-- Docker compose file for dockerizing all the three parts.
+- Docker compose file for dockerizing all the parts.(7 in all)
 
 ## Table of Contents
 
@@ -198,6 +198,12 @@ The following commands are executed from the root directory.
  docker build -t cricket-api-publisher-3 .
  cd ..
  docker-compose up --remove-orphans
+```
+
+Post RabbitMQ docker deployment, enable Web STOMP by:
+
+```sh
+rabbitmq-plugins enable rabbitmq_web_stomp
 ```
 
 ## Contributors
