@@ -56,7 +56,7 @@ We will be publishing the app on Docker so that the app is platform independant 
 
 ## CurrentStatus
 
-**3rd October,2021:** We have created a full architecture of 3 publishers and n number of subscribers that interact with each other in our pub sub model. Our middleware is RabbitMQ which serves as queue to transfer messages from the broker node to the client. The client can subscribe to three subscriptions and the data will be displayed in his dashboard. Also there are advertisements that pop up in the middle in each topic that lets user know what other data is being displayed in other topics. The user is given the flexibility to turn off or on the adds as he deems fit. The data transferred by the publisher to the broker is also being transferred to the database. The data is transferred into the database only when there is a change in the data, thus preventing replications. We have also provisioned that advertisements are not pushed in the database.
+**3rd October,2021:** We have created a full architecture of 3 publishers and n number of subscribers that interact with each other in our pub sub model. Our middleware is RabbitMQ(for time and space uncoupling) which serves as queue to transfer messages from the broker node to the client. The client can subscribe to three subscriptions and the data will be displayed in his dashboard. Also there are advertisements that pop up in the middle in each topic that lets user know what other data is being displayed in other topics. The user is given the flexibility to turn off or on the adds as he deems fit. The data transferred by the publisher to the broker is also being transferred to the database. The data is transferred into the database only when there is a change in the data, thus preventing replications. We have also provisioned that advertisements are not pushed in the database.
 
 ### Architectural Model
 
@@ -66,12 +66,10 @@ We will be publishing the app on Docker so that the app is platform independant 
 
 ![](screenshots/flowchart.png)
 
+
 **26th September,2021:** We have created a simple CRUD (Create,Read,Update,Delete) app that fetches the data from the database and gives us the relevant values.
 We have created a UI where a person is able to see the win percentage of a particular team by clicking on the respective cards. Five API's have been created to create this version.
 
-### Client-Server Interaction
-
-![](screenshots/clientServerInteraction.png)
 
 ### Backend Status:
 
@@ -123,6 +121,14 @@ const userSchema = new mongoose.Schema({
  });
 ```
 
+### RabbitMQ Deployment
+Rabbit MQ running queues for 3 topics and one advertisement that gets data from all the three topics.
+
+![](screenshots/11_RabbitMQ.png)
+
+### Docker Deployment
+![](screenshots/11_docker.png)
+
 ### Frontend Status:
 
 #### Ports
@@ -139,29 +145,41 @@ const userSchema = new mongoose.Schema({
 
 #### Screenshots
 
-- UI Landing Page
+- New user registration
 
-  ![](client/screenshots/UI-1.png)
+  ![](client/screenshots/1_Register.png)
 
-- UI add match form that uses the "Add match details api."
+- Logging the new user in
 
-  ![](client/screenshots/UI-2.png)
+  ![](client/screenshots/2_Login.png)
 
-- UI add match form with sample values.
+- Main landing page
 
-  ![](client/screenshots/UI-3.png)
+  ![](client/screenshots/3_Menu.png)
 
-- UI add match success.
+- Showing topics that the user can subscribe to
 
-  ![](client/screenshots/UI-4.png)
+  ![](client/screenshots/4_AvailableSubs.png)
 
-- UI match present check that prevents the user from adding the match if some constraints are satisfied.
+- Showing the users subscription.
 
-  ![](client/screenshots/UI-5.png)
+  ![](client/screenshots/5_YourSubs.png)
 
-- UI display of match statistics with the help of a pie chart.
+- Going to the subscription page of topic one (Teams available in a country) where you can see advertisements and its unsubscribe button
 
-  ![](client/screenshots/UI-6.png)
+  ![](client/screenshots/6_SubscriptionPage.png)
+
+- Topic 2: Team Win Statistics
+
+  ![](client/screenshots/7_StatsOfTeams.png)
+  
+- Topic 3: Umbires By Country
+
+  ![](client/screenshots/8_UmpiresOfCountry.png)
+  
+- Advertisement button toggle
+
+  ![](client/screenshots/10_Profile.png)
 
 ## Installation
 
