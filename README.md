@@ -60,7 +60,7 @@ We will be publishing the app on Docker so that the app is platform independant 
 
 ### Architectural Model
 
-![](screenshots/architecture.png)
+![](screenshots/PubSub.jpg)
 
 ### Algorithm Workflow
 
