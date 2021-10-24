@@ -13,7 +13,7 @@ This repository contains:
 ## Table of Contents
 
 - [Background](#background)
-- [TechnologiesUsed](#technologiesused)
+- [WebStack](#webstack)
 - [Prerequisites](#prerequisites)
 - [CurrentStatus](#currentstatus)
 - [Installation](#installation)
@@ -25,10 +25,10 @@ This repository contains:
 We aim to create a distributed system that notifes the user about various cricketing statistics presently going on. The user will have the flexibilty to choose the type of notifications it desires and the system will only send the relevant information to it.
 We will be publishing the app on Docker so that the app is platform independant and can be used ubiquitously.
 
-## TechnologiesUsed
+## WebStack
 
-- Front-End Development: React JS
-- Back-End Development : Node JS
+- Front-End Development: React, Redux, Web Stomp, Web Socket
+- Back-End Development : Node JS, socket-io, mongoose
 - Database: MongoDB
 - Deployment : Docker
 - Middleware : RabbitMQ
