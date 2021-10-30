@@ -4,9 +4,9 @@ const publishMessage = async (req, res) => {
   try {
     const { topicId, message } = req.body;
     return new Promise((resolve, reject) => {
-      resolve(PublishHelper.publishMessage(topicId, message));
+      resolve(PublishHelper.publishMessageHelper(topicId, message));
     })
-      .then(() => {
+      .then((res) => {
         return {
           success: 200,
           message: "Message Published",
