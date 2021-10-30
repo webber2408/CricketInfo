@@ -146,7 +146,7 @@ const addTopicDataAndPublish = async (topicId, topicData) => {
       topicName: existingTopic[0].topicName,
       newData: topicData,
     };
-    PublishHelper.publishMessage(toPublishItem.topicId, toPublishItem);
+    PublishHelper.publishMessageHelper(toPublishItem.topicId, toPublishItem);
 
     return {
       success: 200,

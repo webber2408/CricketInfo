@@ -67,9 +67,10 @@ var io = require("socket.io-client");
 
 app.listen(PORT, () => {
   console.log(`Publisher 1 started on port: ${PORT}`);
-  var socket = io.connect("http://cricket-api:3004/", {
-    // DOCKER
-    // var socket = io.connect("http://localhost:3004/", { // LOCAL
+  // var socket = io.connect("http://cricket-api:3004/", {
+  // DOCKER
+  var socket = io.connect("http://localhost:3004/", {
+    // LOCAL
     reconnection: true,
   });
 

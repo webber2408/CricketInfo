@@ -1,4 +1,5 @@
 const amqplib = require("amqplib");
+const User = require("../model/user");
 
 const getGlobalConnection = () => {
   return {
@@ -7,14 +8,42 @@ const getGlobalConnection = () => {
   };
 };
 
-const publishMessage = async (topicId, message) => {
+const publishMessageHelper = async (topicId, message) => {
+  try {
+    const users = await User.find({
+      subscribedTopicIds: topicId,
+    }).exec();
+    if (!users) {
+      console.log("Error fetching users, users got undefined");
+      return;
+    }
+    let arrayOfPromises = [];
+    users.forEach((user) => {
+      return (arrayOfPromises = [
+        ...arrayOfPromises,
+        new Promise((resolve, reject) => {
+          let queueId = user.email + "_" + topicId;
+          resolve(publishMessage(queueId, message));
+        }),
+      ]);
+    });
+    return Promise.all(arrayOfPromises).then(() => {
+      console.log("MESSAGE PUSHED TO ALL SUBSCRIBER QUEUES!");
+    });
+  } catch (err) {
+    console.log("Error fetching users for the given topicId", err);
+    return;
+  }
+};
+
+const publishMessage = async (queueId, message) => {
   let { connection, channel } = getGlobalConnection();
   if (!connection || !channel) {
-    // connection = await amqplib.connect("amqp://localhost:5672", "heartbeat=60"); // ON LOCAL
-    connection = await amqplib.connect(
-      "amqp://rabbitmq:5672", // ON DOCKER
-      "heartbeat=60"
-    );
+    connection = await amqplib.connect("amqp://localhost:5672", "heartbeat=60"); // ON LOCAL
+    // connection = await amqplib.connect(
+    //   "amqp://rabbitmq:5672", // ON DOCKER
+    //   "heartbeat=60"
+    // );
     channel = await connection.createChannel();
     global.amqplConnection = connection;
   }
@@ -22,8 +51,8 @@ const publishMessage = async (topicId, message) => {
   try {
     console.log("Publishing");
     const exchange = "cricketQueue";
-    const queue = "queue." + topicId;
-    const routingKey = topicId;
+    const queue = "queue." + queueId;
+    const routingKey = queueId;
 
     await channel.assertExchange(exchange, "direct", { durable: true });
     await channel.assertQueue(queue, { durable: true });
@@ -48,4 +77,5 @@ const publishMessage = async (topicId, message) => {
 
 module.exports = {
   publishMessage,
+  publishMessageHelper,
 };
