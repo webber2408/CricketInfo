@@ -1,39 +1,15 @@
 const mongoose = require("mongoose");
-const io = require("socket.io")(3002);
+const io = require("socket.io")(3003);
 const ioClient = require("socket.io-client");
 const fastify = require("fastify")({ logger: true });
 const PublishHelper = require("./src/publishHelper/publishHelper");
-const { isTopicPresent } = require("../server2/src/controller/topicController");
 const express = require("express");
+const { isTopicPresent } = require("../server3/src/controller/topicController");
 const app = express();
-
-const neighboursPort = {
-  Server2: "8000",
-  Server3: "9000",
-};
-
-const SERVER_PORT = 5002;
-
-app.get("/", (req, res) => {
-  res.send("Hello from Publisher-1");
-});
-
-// get data from the publisher
-// export const isTopicPresent = createAsyncThunk(
-//     "cricket/getAllTopics",
-//     async (thunkApi) => {
-//       const response = await api.get("/topic/all");
-//       if (response.status == 400) {
-//         return thunkApi.rejectWithValue({
-//           errorMessage: "Error fetching the topics",
-//         });
-//       }
-//       return response.data.data;
-//     }
-//   );
+const SERVER_PORT = 5003;
 
 app.listen(SERVER_PORT, () => {
-  console.log(`Server 2 started on port: ${SERVER_PORT}`);
+  console.log(`Server 3 started on port: ${SERVER_PORT}`);
   // var socketServer1 = ioClient.connect("http://cricket-api:3001/", {
   // DOCKER
   var socketServer1 = ioClient.connect("http://localhost:3001/", {
@@ -42,24 +18,25 @@ app.listen(SERVER_PORT, () => {
   });
   // var socketServer3 = ioClient.connect("http://cricket-api:3001/", {
   // DOCKER
-  var socketServer3 = ioClient.connect("http://localhost:3003/", {
+  var socketServer2 = ioClient.connect("http://localhost:3002/", {
     // LOCAL
     reconnection: true,
   });
 
   var dummy = {
     topicId: "406dc390-7342-4880-b2ba-6ab64306bea1",
-    topicData: "I am from server 2",
+    topicData: "I am from server 3",
     isAdvertisement: true,
   };
   socketServer1.emit("push_to_node_broker1", dummy);
   // Getting Data from all of its client
   io.on("connection", function (socket) {
-    console.log("CONNECTED to server 2 => ", socket.client.id);
+    console.log("CONNECTED to server 3 => ", socket.client.id);
     socket.on(
-      "push_to_node_broker2",
+      "push_to_node_broker3",
       async ({ topicID, topicData, isAdvertisement }) => {
         let status = await isTopicPresent(topicID);
+
         if (!status) {
           console.log(topicData);
           socketServer1.emit("push_to_node_broker1", {
@@ -67,7 +44,7 @@ app.listen(SERVER_PORT, () => {
             topicData,
             isAdvertisement,
           });
-          socketServer3.emit("push_to_node_broker3", {
+          socketServer2.emit("push_to_node_broker2", {
             topicID,
             topicData,
             isAdvertisement,
@@ -103,7 +80,7 @@ app.listen(SERVER_PORT, () => {
 //   res.send("Cricket Information Server Started");
 // });
 
-// //MongoDB
+//MongoDB
 mongoose
   //   .connect("mongodb://mongo:27017/cricketInfo", {
   // ON DOCKER
@@ -140,3 +117,20 @@ mongoose
 // };
 
 // start();
+
+// // Publisher Connection & Updation
+// io.on("connection", function (socket) {
+//   console.log("CONNECTED PUBLISHER => ", socket.client.id);
+//   socket.on("publisher_push", ({ topicId, topicData, isAdvertisement }) => {
+//     console.log("PUBLISHER DATA", topicData);
+//     if (!isAdvertisement) {
+//       addTopicDataAndPublish(topicId, topicData);
+//     } else {
+//       // console.log("HERE");
+//       PublishHelper.publishMessage("advertisement", {
+//         ...topicData,
+//         isAdvertisement,
+//       });
+//     }
+//   });
+// });

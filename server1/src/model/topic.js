@@ -8,4 +8,4 @@ const topicSchema = new mongoose.Schema({
   topicStatus: Number,
 });
 
-module.exports = mongoose.model("Topic", topicSchema);
+module.exports = mongoose.model("TopicBrokerNode1", topicSchema);

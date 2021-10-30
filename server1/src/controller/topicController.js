@@ -3,33 +3,19 @@ const Topic = require("../model/topic");
 const User = require("../model/user");
 const PublishHelper = require("../publishHelper/publishHelper");
 
-
-const isTopicPresent = async (req, res) => {
+const isTopicPresent = async (topicID) => {
   try {
-    const {topicID} = req.params;
-    const results = await Topic.find({topicID:topicID}).exec();
+    // const {topicID} = req.params;
+    const results = await Topic.find({ topicID: topicID }).exec();
     if (results[0]) {
-      return {
-        success: 200,
-        message: "Topic fetched successfully",
-        data: true,
-      };
-    } else {
-      return {
-        success: 404,
-        message: "No topics found",
-        data: false,
-      };
+      return true;
     }
+    return false;
   } catch (err) {
     console.log(err);
-    return {
-      success: 500,
-      message: "Error fetching topics",
-    };
+    return false;
   }
 };
-
 
 const getAllTopics = async (req, res) => {
   try {
