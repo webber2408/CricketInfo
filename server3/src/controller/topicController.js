@@ -3,10 +3,10 @@ const Topic = require("../model/topic");
 const User = require("../model/user");
 const PublishHelper = require("../publishHelper/publishHelper");
 
-const isTopicPresent = async (topicID) => {
+const isTopicPresent = async (topicId) => {
   try {
-    // const {topicID} = req.params;
-    const results = await Topic.find({ topicId: topicID }).exec();
+    // const {topicId} = req.params;
+    const results = await Topic.find({ topicId: topicId }).exec();
     if (results && results[0]) {
       return true;
     }

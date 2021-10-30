@@ -21,7 +21,7 @@ const server3Rendezvous = () => {
   });
 
   var dummy = {
-    topicID: "e2bb856b-90e0-4242-9cd6-f702450dbae6",
+    topicId: "e2bb856b-90e0-4242-9cd6-f702450dbae6",
     topicData: "I am from server 3",
     isAdvertisement: true,
   };
@@ -31,18 +31,18 @@ const server3Rendezvous = () => {
     console.log("CONNECTED to server 3 => ", socket.client.id);
     socket.on(
       "push_to_node_broker3",
-      async ({ topicID, topicData, isAdvertisement }) => {
-        let status = await isTopicPresent(topicID);
+      async ({ topicId, topicData, isAdvertisement }) => {
+        let status = await isTopicPresent(topicId);
 
         if (!status) {
           console.log(topicData);
           socketServer1.emit("push_to_node_broker1", {
-            topicID,
+            topicId,
             topicData,
             isAdvertisement,
           });
           socketServer2.emit("push_to_node_broker2", {
-            topicID,
+            topicId,
             topicData,
             isAdvertisement,
           });

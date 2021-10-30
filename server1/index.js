@@ -39,25 +39,25 @@ const server1Rendezvous = () => {
     console.log("CONNECTED to Server 2 => ", socket.client.id);
     socket.on(
       "push_to_node_broker1",
-      async ({ topicID, topicData, isAdvertisement }) => {
-        console.log("Topic ID", topicID);
-        let status = await isTopicPresent(topicID);
+      async ({ topicId, topicData, isAdvertisement }) => {
+        console.log("Topic ID", topicId);
+        let status = await isTopicPresent(topicId);
         console.log("STATUS", status);
         if (!status) {
           console.log(topicData);
           socketServer2.emit("push_to_node_broker2", {
-            topicID,
+            topicId,
             topicData,
             isAdvertisement,
           });
           socketServer3.emit("push_to_node_broker3", {
-            topicID,
+            topicId,
             topicData,
             isAdvertisement,
           });
         } else {
           console.log("found");
-          addTopicDataAndPublish(topicID, topicData);
+          addTopicDataAndPublish(topicId, topicData);
         }
       }
     );
