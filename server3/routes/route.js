@@ -62,11 +62,6 @@ const topicRoutes = [
   {
     method: "GET",
     url: "/api/topic/all",
-    handler: TopicController.isTopicPresent,
-  },
-  {
-    method: "GET",
-    url: "/api/topic/all",
     handler: TopicController.getAllTopics,
   },
   {

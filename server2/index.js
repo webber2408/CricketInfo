@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const io = require("socket.io")(3002);
 const ioClient = require("socket.io-client");
 const fastify = require("fastify")({ logger: true });
-const PublishHelper = require("./src/publishHelper/publishHelper");
 const { isTopicPresent } = require("../server2/src/controller/topicController");
 const express = require("express");
 const app = express();
@@ -18,21 +17,7 @@ app.get("/", (req, res) => {
   res.send("Hello from Publisher-1");
 });
 
-// get data from the publisher
-// export const isTopicPresent = createAsyncThunk(
-//     "cricket/getAllTopics",
-//     async (thunkApi) => {
-//       const response = await api.get("/topic/all");
-//       if (response.status == 400) {
-//         return thunkApi.rejectWithValue({
-//           errorMessage: "Error fetching the topics",
-//         });
-//       }
-//       return response.data.data;
-//     }
-//   );
-
-app.listen(SERVER_PORT, () => {
+const server2Rendezvous = () => {
   console.log(`Server 2 started on port: ${SERVER_PORT}`);
   // var socketServer1 = ioClient.connect("http://cricket-api:3001/", {
   // DOCKER
@@ -47,12 +32,12 @@ app.listen(SERVER_PORT, () => {
     reconnection: true,
   });
 
-  var dummy = {
-    topicId: "406dc390-7342-4880-b2ba-6ab64306bea1",
-    topicData: "I am from server 2",
-    isAdvertisement: true,
-  };
-  socketServer1.emit("push_to_node_broker1", dummy);
+  // var dummy = {
+  //   topicId: "406dc390-7342-4880-b2ba-6ab64306bea1",
+  //   topicData: "I am from server 2",
+  //   isAdvertisement: true,
+  // };
+  // socketServer1.emit("push_to_node_broker1", dummy);
   // Getting Data from all of its client
   io.on("connection", function (socket) {
     console.log("CONNECTED to server 2 => ", socket.client.id);
@@ -60,6 +45,7 @@ app.listen(SERVER_PORT, () => {
       "push_to_node_broker2",
       async ({ topicID, topicData, isAdvertisement }) => {
         let status = await isTopicPresent(topicID);
+        console.log("STATUS ", status);
         if (!status) {
           console.log(topicData);
           socketServer1.emit("push_to_node_broker1", {
@@ -78,30 +64,26 @@ app.listen(SERVER_PORT, () => {
       }
     );
   });
-  // socketServer1.emit("push_to_server1", "world1");
+};
+
+//CORS
+fastify.register(require("fastify-cors"), {
+  origin: ["http://localhost:3000"],
+  method: ["GET", "POST", "PUT", "DELETE"],
 });
 
-// //CORS
-// fastify.register(require("fastify-cors"), {
-//   origin: ["http://localhost:3000"],
-//   method: ["GET", "POST", "PUT", "DELETE"],
-// });
+//Routes
+const routes = require("./routes/route.js");
 
-// //Routes
-// const routes = require("./routes/route.js");
-// const {
-//   addTopicDataAndPublish,
-// } = require("./src/controller/topicController.js");
+Object.values(routes).forEach((item) => {
+  item.forEach((route) => {
+    fastify.route(route);
+  });
+});
 
-// Object.values(routes).forEach((item) => {
-//   item.forEach((route) => {
-//     fastify.route(route);
-//   });
-// });
-
-// fastify.get("/", (req, res) => {
-//   res.send("Cricket Information Server Started");
-// });
+fastify.get("/", (req, res) => {
+  res.send("Cricket Information Server Started");
+});
 
 // //MongoDB
 mongoose
@@ -120,23 +102,24 @@ mongoose
     console.log(err);
   });
 
-// //Server
-// const start = async () => {
-//   try {
-//     fastify
-//       .listen(SERVER_PORT, "0.0.0.0")
-//       .then((address) => {
-//         console.log(`Server started at ${address}`);
-//       })
-//       .catch((err) => {
-//         console.log("Error starting server: " + err);
-//         process.exit(1);
-//       });
-//   } catch {
-//     fastify.log.error("Error");
-//     fastify.log.error(err);
-//     process.exit(1);
-//   }
-// };
+//Server
+const start = async () => {
+  try {
+    fastify
+      .listen(SERVER_PORT, "0.0.0.0")
+      .then((address) => {
+        console.log(`Server started at ${address}`);
+        server2Rendezvous();
+      })
+      .catch((err) => {
+        console.log("Error starting server: " + err);
+        process.exit(1);
+      });
+  } catch {
+    fastify.log.error("Error");
+    fastify.log.error(err);
+    process.exit(1);
+  }
+};
 
-// start();
+start();

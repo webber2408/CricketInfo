@@ -6,8 +6,8 @@ const PublishHelper = require("../publishHelper/publishHelper");
 const isTopicPresent = async (topicID) => {
   try {
     // const {topicID} = req.params;
-    const results = await Topic.find({ topicID: topicID }).exec();
-    if (results[0]) {
+    const results = await Topic.find({ topicId: topicID }).exec();
+    if (results && results[0]) {
       return true;
     }
     return false;

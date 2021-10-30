@@ -2,13 +2,8 @@ const mongoose = require("mongoose");
 const io = require("socket.io")(3001);
 const ioClient = require("socket.io-client");
 const fastify = require("fastify")({ logger: true });
-const PublishHelper = require("./src/publishHelper/publishHelper");
 const { isTopicPresent } = require("../server1/src/controller/topicController");
-const express = require("express");
-const {
-  addTopic,
-  addTopicDataAndPublish,
-} = require("./src/controller/topicController");
+const { addTopicDataAndPublish } = require("./src/controller/topicController");
 
 const neighboursPort = {
   Server2: "8000",
@@ -17,9 +12,7 @@ const neighboursPort = {
 
 const SERVER_PORT = 5001;
 
-const app = express();
-
-app.listen(SERVER_PORT, () => {
+const server1Rendezvous = () => {
   console.log(`Server 1 started on port: ${SERVER_PORT}`);
 
   //   var socketServer2 = ioClient.connect("http://cricket-api:3002/", {
@@ -35,19 +28,21 @@ app.listen(SERVER_PORT, () => {
     // LOCAL
     reconnection: true,
   });
-  var dummy = {
-    topicId: "406dc390-7342-4880-b2ba-6ab64306bea1",
-    topicData: ["I am from server 1"],
-    isAdvertisement: true,
-  };
-  socketServer2.emit("push_to_node_broker2", dummy);
+  // var dummy = {
+  //   topicId: "406dc390-7342-4880-b2ba-6ab64306bea1",
+  //   topicData: ["I am from server 1"],
+  //   isAdvertisement: true,
+  // };
+  // socketServer2.emit("push_to_node_broker2", dummy);
   //   Getting Data from all of its client
   io.on("connection", function (socket) {
     console.log("CONNECTED to Server 2 => ", socket.client.id);
     socket.on(
       "push_to_node_broker1",
       async ({ topicID, topicData, isAdvertisement }) => {
+        console.log("Topic ID", topicID);
         let status = await isTopicPresent(topicID);
+        console.log("STATUS", status);
         if (!status) {
           console.log(topicData);
           socketServer2.emit("push_to_node_broker2", {
@@ -62,12 +57,12 @@ app.listen(SERVER_PORT, () => {
           });
         } else {
           console.log("found");
-          addTopicDataAndPublish(topicId, topicData);
+          addTopicDataAndPublish(topicID, topicData);
         }
       }
     );
   });
-});
+};
 
 // //CORS
 fastify.register(require("fastify-cors"), {
@@ -112,6 +107,7 @@ const start = async () => {
       .listen(SERVER_PORT, "0.0.0.0")
       .then((address) => {
         console.log(`Server started at ${address}`);
+        server1Rendezvous();
       })
       .catch((err) => {
         console.log("Error starting server: " + err);

@@ -2,13 +2,10 @@ const mongoose = require("mongoose");
 const io = require("socket.io")(3003);
 const ioClient = require("socket.io-client");
 const fastify = require("fastify")({ logger: true });
-const PublishHelper = require("./src/publishHelper/publishHelper");
-const express = require("express");
 const { isTopicPresent } = require("../server3/src/controller/topicController");
-const app = express();
 const SERVER_PORT = 5003;
 
-app.listen(SERVER_PORT, () => {
+const server3Rendezvous = () => {
   console.log(`Server 3 started on port: ${SERVER_PORT}`);
   // var socketServer1 = ioClient.connect("http://cricket-api:3001/", {
   // DOCKER
@@ -24,7 +21,7 @@ app.listen(SERVER_PORT, () => {
   });
 
   var dummy = {
-    topicId: "406dc390-7342-4880-b2ba-6ab64306bea1",
+    topicID: "e2bb856b-90e0-4242-9cd6-f702450dbae6",
     topicData: "I am from server 3",
     isAdvertisement: true,
   };
@@ -56,29 +53,26 @@ app.listen(SERVER_PORT, () => {
     );
   });
   // socketServer1.emit("push_to_server1", "world1");
+};
+
+//CORS
+fastify.register(require("fastify-cors"), {
+  origin: ["http://localhost:3000"],
+  method: ["GET", "POST", "PUT", "DELETE"],
 });
 
-// //CORS
-// fastify.register(require("fastify-cors"), {
-//   origin: ["http://localhost:3000"],
-//   method: ["GET", "POST", "PUT", "DELETE"],
-// });
+//Routes
+const routes = require("./routes/route.js");
 
-// //Routes
-// const routes = require("./routes/route.js");
-// const {
-//   addTopicDataAndPublish,
-// } = require("./src/controller/topicController.js");
+Object.values(routes).forEach((item) => {
+  item.forEach((route) => {
+    fastify.route(route);
+  });
+});
 
-// Object.values(routes).forEach((item) => {
-//   item.forEach((route) => {
-//     fastify.route(route);
-//   });
-// });
-
-// fastify.get("/", (req, res) => {
-//   res.send("Cricket Information Server Started");
-// });
+fastify.get("/", (req, res) => {
+  res.send("Cricket Information Server Started");
+});
 
 //MongoDB
 mongoose
@@ -97,26 +91,27 @@ mongoose
     console.log(err);
   });
 
-// //Server
-// const start = async () => {
-//   try {
-//     fastify
-//       .listen(SERVER_PORT, "0.0.0.0")
-//       .then((address) => {
-//         console.log(`Server started at ${address}`);
-//       })
-//       .catch((err) => {
-//         console.log("Error starting server: " + err);
-//         process.exit(1);
-//       });
-//   } catch {
-//     fastify.log.error("Error");
-//     fastify.log.error(err);
-//     process.exit(1);
-//   }
-// };
+//Server
+const start = async () => {
+  try {
+    fastify
+      .listen(SERVER_PORT, "0.0.0.0")
+      .then((address) => {
+        console.log(`Server started at ${address}`);
+        server3Rendezvous();
+      })
+      .catch((err) => {
+        console.log("Error starting server: " + err);
+        process.exit(1);
+      });
+  } catch {
+    fastify.log.error("Error");
+    fastify.log.error(err);
+    process.exit(1);
+  }
+};
 
-// start();
+start();
 
 // // Publisher Connection & Updation
 // io.on("connection", function (socket) {
