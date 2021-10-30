@@ -10,9 +10,9 @@ import {
   resetAdvertisement,
   selectTopic,
 } from "../../slices/topicSlice";
+import { toggleAdvertisement } from "../../slices/userSlice";
 
 import "./topicDetail.css";
-import { toggleAdvertisement } from "../../slices/userSlice";
 
 const TopicDetail = () => {
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ const TopicDetail = () => {
 
   useEffect(() => {
     if (topic) {
-      subscribeToTopic(topic.topicId, false);
+      subscribeToTopic(userEmail + "_" + topic.topicId, false);
       subscribeToTopic(null, true);
     }
 
