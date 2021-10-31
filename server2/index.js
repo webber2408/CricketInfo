@@ -1,70 +1,7 @@
 const mongoose = require("mongoose");
-const io = require("socket.io")(3002);
-const ioClient = require("socket.io-client");
+const { Rendezvous } = require("./rendezvous");
 const fastify = require("fastify")({ logger: true });
-const { isTopicPresent } = require("../server2/src/controller/topicController");
-const express = require("express");
-const app = express();
-
-const neighboursPort = {
-  Server2: "8000",
-  Server3: "9000",
-};
-
 const SERVER_PORT = 5002;
-
-app.get("/", (req, res) => {
-  res.send("Hello from Publisher-1");
-});
-
-const server2Rendezvous = () => {
-  console.log(`Server 2 started on port: ${SERVER_PORT}`);
-  // var socketServer1 = ioClient.connect("http://cricket-api:3001/", {
-  // DOCKER
-  var socketServer1 = ioClient.connect("http://localhost:3001/", {
-    // LOCAL
-    reconnection: true,
-  });
-  // var socketServer3 = ioClient.connect("http://cricket-api:3001/", {
-  // DOCKER
-  var socketServer3 = ioClient.connect("http://localhost:3003/", {
-    // LOCAL
-    reconnection: true,
-  });
-
-  // var dummy = {
-  //   topicId: "406dc390-7342-4880-b2ba-6ab64306bea1",
-  //   topicData: "I am from server 2",
-  //   isAdvertisement: true,
-  // };
-  // socketServer1.emit("push_to_node_broker1", dummy);
-  // Getting Data from all of its client
-  io.on("connection", function (socket) {
-    console.log("CONNECTED to server 2 => ", socket.client.id);
-    socket.on(
-      "push_to_node_broker2",
-      async ({ topicId, topicData, isAdvertisement }) => {
-        let status = await isTopicPresent(topicId);
-        console.log("STATUS ", status);
-        if (!status) {
-          console.log(topicData);
-          socketServer1.emit("push_to_node_broker1", {
-            topicId,
-            topicData,
-            isAdvertisement,
-          });
-          socketServer3.emit("push_to_node_broker3", {
-            topicId,
-            topicData,
-            isAdvertisement,
-          });
-        } else {
-          console.log("Perform operation");
-        }
-      }
-    );
-  });
-};
 
 //CORS
 fastify.register(require("fastify-cors"), {
@@ -75,6 +12,7 @@ fastify.register(require("fastify-cors"), {
 //Routes
 const routes = require("./routes/route.js");
 
+// Mapping fastify routes
 Object.values(routes).forEach((item) => {
   item.forEach((route) => {
     fastify.route(route);
@@ -109,7 +47,7 @@ const start = async () => {
       .listen(SERVER_PORT, "0.0.0.0")
       .then((address) => {
         console.log(`Server started at ${address}`);
-        server2Rendezvous();
+        Rendezvous();
       })
       .catch((err) => {
         console.log("Error starting server: " + err);

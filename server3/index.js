@@ -1,59 +1,7 @@
 const mongoose = require("mongoose");
-const io = require("socket.io")(3003);
-const ioClient = require("socket.io-client");
+const { Rendezvous } = require("./rendezvous");
 const fastify = require("fastify")({ logger: true });
-const { isTopicPresent } = require("../server3/src/controller/topicController");
 const SERVER_PORT = 5003;
-
-const server3Rendezvous = () => {
-  console.log(`Server 3 started on port: ${SERVER_PORT}`);
-  // var socketServer1 = ioClient.connect("http://cricket-api:3001/", {
-  // DOCKER
-  var socketServer1 = ioClient.connect("http://localhost:3001/", {
-    // LOCAL
-    reconnection: true,
-  });
-  // var socketServer3 = ioClient.connect("http://cricket-api:3001/", {
-  // DOCKER
-  var socketServer2 = ioClient.connect("http://localhost:3002/", {
-    // LOCAL
-    reconnection: true,
-  });
-
-  var dummy = {
-    topicId: "e2bb856b-90e0-4242-9cd6-f702450dbae6",
-    topicData: "I am from server 3",
-    isAdvertisement: true,
-  };
-  socketServer1.emit("push_to_node_broker1", dummy);
-  // Getting Data from all of its client
-  io.on("connection", function (socket) {
-    console.log("CONNECTED to server 3 => ", socket.client.id);
-    socket.on(
-      "push_to_node_broker3",
-      async ({ topicId, topicData, isAdvertisement }) => {
-        let status = await isTopicPresent(topicId);
-
-        if (!status) {
-          console.log(topicData);
-          socketServer1.emit("push_to_node_broker1", {
-            topicId,
-            topicData,
-            isAdvertisement,
-          });
-          socketServer2.emit("push_to_node_broker2", {
-            topicId,
-            topicData,
-            isAdvertisement,
-          });
-        } else {
-          console.log("Perform operation");
-        }
-      }
-    );
-  });
-  // socketServer1.emit("push_to_server1", "world1");
-};
 
 //CORS
 fastify.register(require("fastify-cors"), {
@@ -64,6 +12,7 @@ fastify.register(require("fastify-cors"), {
 //Routes
 const routes = require("./routes/route.js");
 
+// Mapping fastify routes
 Object.values(routes).forEach((item) => {
   item.forEach((route) => {
     fastify.route(route);
@@ -98,7 +47,7 @@ const start = async () => {
       .listen(SERVER_PORT, "0.0.0.0")
       .then((address) => {
         console.log(`Server started at ${address}`);
-        server3Rendezvous();
+        Rendezvous();
       })
       .catch((err) => {
         console.log("Error starting server: " + err);
