@@ -1,4 +1,6 @@
 const jwt = require("jsonwebtoken");
+const RendezvousSub = require("../../rendezvousSub");
+const { APIS } = require("../../rendezvousConfig");
 const User = require("../model/user");
 
 const jwtKey = "rahul_aruvansh";
@@ -53,6 +55,13 @@ const register = async (req, res) => {
     }
     const user = await User.find({ email: toSaveUser.email }).exec();
     if (user[0]) {
+      // Need to rendezvous whatever be the status here!
+      RendezvousSub.SubscriberRendezvous({
+        apiCall: APIS.REGISTER,
+        apiReq: {
+          body: req.body,
+        },
+      });
       return {
         success: 422,
         message: "User already registered, please login",
@@ -61,11 +70,20 @@ const register = async (req, res) => {
     toSaveUser.subscribedTopicIds = [];
     const result = await new User({ ...toSaveUser }).save();
     if (result) {
+      // Need to rendezvous whatever be the status here!
+      Subcriber;
       return {
         success: 200,
         message: "User registered successfully",
       };
     } else {
+      // Need to rendezvous whatever be the status here!
+      RendezvousSub.SubscriberRendezvous({
+        apiCall: APIS.REGISTER,
+        apiReq: {
+          body: req.body,
+        },
+      });
       return {
         success: 500,
         message: "User registration failed",
@@ -73,6 +91,13 @@ const register = async (req, res) => {
     }
   } catch (err) {
     console.error("Registration failed ", err);
+    // Need to rendezvous whatever be the status here!
+    RendezvousSub.SubscriberRendezvous({
+      apiCall: APIS.REGISTER,
+      apiReq: {
+        body: req.body,
+      },
+    });
     return {
       success: 500,
       message: "Registration failed",

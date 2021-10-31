@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Rendezvous } = require("./rendezvous");
+const Rendezvous = require("./rendezvous");
 const fastify = require("fastify")({ logger: true });
 const SERVER_PORT = 5002;
 
@@ -47,7 +47,7 @@ const start = async () => {
       .listen(SERVER_PORT, "0.0.0.0")
       .then((address) => {
         console.log(`Server started at ${address}`);
-        Rendezvous();
+        Rendezvous.Rendezvous();
       })
       .catch((err) => {
         console.log("Error starting server: " + err);

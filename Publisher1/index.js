@@ -3,7 +3,7 @@ const CONFIG = require("./config.json");
 const _ = require("lodash");
 const express = require("express");
 
-const PORT = 5001;
+const PORT = 6001;
 const app = express();
 
 app.get("/", (req, res) => {
@@ -63,20 +63,18 @@ const api_calls = async () => {
   }
 };
 
-var io = require("socket.io-client");
+var io = require("socket.io")(7001);
 
 app.listen(PORT, () => {
   console.log(`Publisher 1 started on port: ${PORT}`);
   // var socket = io.connect("http://cricket-api:3004/", {
   // DOCKER
-  var socket = io.connect("http://localhost:3004/", {
-    // LOCAL
-    reconnection: true,
-  });
+  // var socket = io.connect("http://localhost:3001/", {
+  //   // LOCAL
+  //   reconnection: true,
+  // });
 
-  console.log("SOCKET RAHUL", socket);
-
-  socket.on("connect", async () => {
+  io.on("connection", async (socket) => {
     console.log("connected to cricket-api:3004");
 
     await api_calls();
@@ -91,13 +89,13 @@ app.listen(PORT, () => {
           countryTeams: teamsByCountry[value],
         };
         var dataFormat = {
-          topicId: "406dc390-7342-4880-b2ba-6ab64306bea1",
+          topicId: "80390cfe-7342-4af0-9e7b-27200bbefe21",
           topicData: topicData,
           isAdvertisement: false,
         };
         finalArr.push(dataFormat);
         dataFormat = {
-          topicId: "406dc390-7342-4880-b2ba-6ab64306bea1",
+          topicId: "80390cfe-7342-4af0-9e7b-27200bbefe21",
           topicData: topicData,
           isAdvertisement: true,
         };
@@ -108,11 +106,11 @@ app.listen(PORT, () => {
       let local = i % finalArr.length;
       if (!finalArr[local].isAdvertisement) {
         setTimeout(function () {
-          socket.emit("publisher_push", finalArr[local]);
+          socket.emit("push_from_neighbour", finalArr[local]);
         }, local * 4000);
       } else if (finalArr[local].isAdvertisement) {
         setTimeout(function () {
-          socket.emit("publisher_push", finalArr[local]);
+          socket.emit("push_from_neighbour", finalArr[local]);
         }, local * 1000);
       }
     }

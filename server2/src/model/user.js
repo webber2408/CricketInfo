@@ -9,4 +9,4 @@ const userSchema = new mongoose.Schema({
   receiveAdvertisements: Boolean,
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("UserBrokerNode2", userSchema);

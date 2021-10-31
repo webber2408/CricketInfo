@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
-const { Rendezvous } = require("./rendezvous.js");
+const Rendezvous = require("./rendezvous.js");
 const fastify = require("fastify")({ logger: true });
 const SERVER_PORT = 5001;
 
-// //CORS
+//CORS
 fastify.register(require("fastify-cors"), {
   origin: ["http://localhost:3000"],
   method: ["GET", "POST", "PUT", "DELETE"],
@@ -23,7 +23,7 @@ fastify.get("/", (req, res) => {
   res.send("Cricket Information Server Started");
 });
 
-// //MongoDB
+//MongoDB
 mongoose
   //   .connect("mongodb://mongo:27017/cricketInfo", {
   // ON DOCKER
@@ -47,7 +47,7 @@ const start = async () => {
       .listen(SERVER_PORT, "0.0.0.0")
       .then((address) => {
         console.log(`Server started at ${address}`);
-        Rendezvous();
+        Rendezvous.Rendezvous();
       })
       .catch((err) => {
         console.log("Error starting server: " + err);
