@@ -38,22 +38,26 @@ const Rendezvous = () => {
     // PUBLISHER PUSH
     socket.on(
       "push_from_neighbour",
-      async ({ topicId, topicData, isAdvertisement }) => {
+      async ({ topicId, topicData, isAdvertisement, cycleCount }) => {
         console.log("RECEIVED", topicId);
-        let status = await isTopicPresent(topicId);
-        if (!status) {
-          // Rendezvous to neighbours as topic not present in server1
-          console.log("RENDEZVOUS TO SERVER 2 & SERVER 3");
-          global?.NEIGHBOUR1_SOCKETS?.forEach((socket) => {
-            socket.emit("push_from_neighbour", {
-              topicId,
-              topicData,
-              isAdvertisement,
+        if (cycleCount <= 3) {
+          let status = await isTopicPresent(topicId);
+          if (!status) {
+            // Rendezvous to neighbours as topic not present in server1
+            console.log("RENDEZVOUS TO SERVER 2 & SERVER 3");
+            cycleCount += 1;
+            global?.NEIGHBOUR1_SOCKETS?.forEach((socket) => {
+              socket.emit("push_from_neighbour", {
+                topicId,
+                topicData,
+                isAdvertisement,
+                cycleCount,
+              });
             });
-          });
-        } else {
-          console.log("FOUND @ SERVER 1");
-          addTopicDataAndPublish(topicId, topicData);
+          } else {
+            console.log("FOUND @ SERVER 1");
+            addTopicDataAndPublish(topicId, topicData);
+          }
         }
       }
     );

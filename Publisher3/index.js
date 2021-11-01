@@ -99,12 +99,14 @@ app.listen(PORT, () => {
           topicId: "f56af9f5-a3da-4ffc-bae0-7a410a88732a",
           topicData: topicData,
           isAdvertisement: false,
+          cycleCount: 0,
         };
         finalArr.push(dataFormat);
         dataFormat = {
           topicId: "f56af9f5-a3da-4ffc-bae0-7a410a88732a",
           topicData: topicData,
           isAdvertisement: true,
+          cycleCount: 0,
         };
         finalArr.push(dataFormat);
       }
