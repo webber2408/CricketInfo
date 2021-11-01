@@ -16,6 +16,9 @@ var winLossPercentage = {
 var teamIdMap = {
   // teamId: teamName
 };
+var seasons = {
+  // seasonId:seasonName
+};
 
 function getWinLossPercentage(standingsRawData, teamRawData) {
   winLossPercentage = {};
@@ -33,12 +36,21 @@ function getWinLossPercentage(standingsRawData, teamRawData) {
   }
 }
 
+function getAllSeasons(seasonRawData) {
+  seasons = {};
+  for (let i in seasonRawData) {
+    seasons[seasonRawData[i]["id"]] = seasonRawData[i]["name"];
+  }
+}
+
 const api_calls = async () => {
   var standingsAPI =
     CONFIG.PUBLISHER_DOMAIN +
     "standings/season/525?api_token=" +
     CONFIG.API_KEY;
   var teamsAPI = CONFIG.PUBLISHER_DOMAIN + "teams?api_token=" + CONFIG.API_KEY;
+  var seasonsAPI =
+    CONFIG.PUBLISHER_DOMAIN + "seasons?api_token=" + CONFIG.API_KEY;
   var configStandings = {
     method: "get",
     url: standingsAPI,
@@ -49,16 +61,23 @@ const api_calls = async () => {
     url: teamsAPI,
     headers: {},
   };
+  var seasons = {
+    method: "get",
+    url: seasonsAPI,
+    headers: {},
+  };
 
   try {
     var standingsRawData = await axios(configStandings);
     var teamRawData = await axios(configTeams);
+    var seasonRawData = await axios(seasons);
   } catch (err) {
     console.log("Error", err);
   }
 
   if (!_.isEmpty(standingsRawData) && !_.isEmpty(teamRawData)) {
     getWinLossPercentage(standingsRawData.data?.data, teamRawData.data?.data);
+    getAllSeasons(seasonRawData.data?.data);
   }
 };
 
@@ -87,18 +106,43 @@ app.listen(PORT, () => {
         winLossPercentage: value,
       };
       var dataFormat = {
-        topicId: "e296ce0a-d87d-48c9-89ac-f7e40fbbbef6",
+        topicId: CONFIG.T4_WIN_LOSS,
         topicData: topicData,
         isAdvertisement: false,
         cycleCount: 0,
       };
       finalArr.push(dataFormat);
-      dataFormat = {
-        topicId: "e296ce0a-d87d-48c9-89ac-f7e40fbbbef6",
+      dataFormat.isAdvertisement = true;
+      finalArr.push(dataFormat);
+    }
+    for (const [key, value] of Object.entries(teamIdMap)) {
+      let topicData = {
+        teamName: value,
+        teamId: key,
+      };
+      var dataFormat = {
+        topicId: CONFIG.T5_TOP_TEAMS,
         topicData: topicData,
-        isAdvertisement: true,
+        isAdvertisement: false,
         cycleCount: 0,
       };
+      finalArr.push(dataFormat);
+      dataFormat.isAdvertisement = true;
+      finalArr.push(dataFormat);
+    }
+    for (const [key, value] of Object.entries(seasons)) {
+      let topicData = {
+        seasonName: value,
+        seasonId: key,
+      };
+      var dataFormat = {
+        topicId: CONFIG.T6_SEASONS,
+        topicData: topicData,
+        isAdvertisement: false,
+        cycleCount: 0,
+      };
+      finalArr.push(dataFormat);
+      dataFormat.isAdvertisement = true;
       finalArr.push(dataFormat);
     }
     for (var i = 0; i < finalArr.length + 100; i++) {
