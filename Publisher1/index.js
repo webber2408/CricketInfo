@@ -89,13 +89,13 @@ app.listen(PORT, () => {
           countryTeams: teamsByCountry[value],
         };
         var dataFormat = {
-          topicId: "80390cfe-7342-4af0-9e7b-27200bbefe21",
+          topicId: "340ad8f0-340d-42a3-ac32-c513f7c2822a",
           topicData: topicData,
           isAdvertisement: false,
         };
         finalArr.push(dataFormat);
         dataFormat = {
-          topicId: "80390cfe-7342-4af0-9e7b-27200bbefe21",
+          topicId: "340ad8f0-340d-42a3-ac32-c513f7c2822a",
           topicData: topicData,
           isAdvertisement: true,
         };

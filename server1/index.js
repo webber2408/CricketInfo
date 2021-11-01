@@ -71,7 +71,7 @@ start();
 //       addTopicDataAndPublish(topicId, topicData);
 //     } else {
 //       // console.log("HERE");
-//       PublishHelper.publishMessage("advertisement", {
+//       PublishHelper.publishMessageHelper("advertisement", {
 //         ...topicData,
 //         isAdvertisement,
 //       });

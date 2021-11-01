@@ -71,7 +71,12 @@ const register = async (req, res) => {
     const result = await new User({ ...toSaveUser }).save();
     if (result) {
       // Need to rendezvous whatever be the status here!
-      Subcriber;
+      RendezvousSub.SubscriberRendezvous({
+        apiCall: APIS.REGISTER,
+        apiReq: {
+          body: req.body,
+        },
+      });
       return {
         success: 200,
         message: "User registered successfully",

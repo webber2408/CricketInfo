@@ -159,7 +159,7 @@ const addTopicDataAndPublish = async (topicId, topicData) => {
       topicName: existingTopic[0].topicName,
       newData: topicData,
     };
-    PublishHelper.publishMessage(toPublishItem.topicId, toPublishItem);
+    PublishHelper.publishMessageHelper(toPublishItem.topicId, toPublishItem);
 
     return {
       success: 200,
@@ -177,36 +177,45 @@ const addTopicDataAndPublish = async (topicId, topicData) => {
 const subscribeToTopic = async (req, res) => {
   try {
     const { topicId, userEmail } = req.params;
-    const existingUser = await User.find({ email: userEmail }).exec();
-    if (existingUser[0]) {
-      if (!existingUser[0].subscribedTopicIds) {
-        existingUser[0].subscribedTopicIds = [];
-      }
-      if (existingUser[0].subscribedTopicIds.find((x) => x == topicId)) {
-        return {
-          success: 422,
-          message: "You are already subscribed!",
-          data: existingUser[0],
-        };
-      }
-      existingUser[0].subscribedTopicIds.push(topicId);
-      const query = await User(existingUser[0]).save();
-      if (query) {
-        return {
-          success: 200,
-          message: "User subscribed to the topic successfully",
-          data: existingUser[0],
-        };
+    if (await isTopicPresent(topicId)) {
+      console.log("TOPIC PRESENT on 3");
+      const existingUser = await User.find({ email: userEmail }).exec();
+      if (existingUser[0]) {
+        if (!existingUser[0].subscribedTopicIds) {
+          existingUser[0].subscribedTopicIds = [];
+        }
+        if (existingUser[0].subscribedTopicIds.find((x) => x == topicId)) {
+          return {
+            success: 422,
+            message: "You are already subscribed!",
+            data: existingUser[0],
+          };
+        }
+        existingUser[0].subscribedTopicIds.push(topicId);
+        const query = await User(existingUser[0]).save();
+        if (query) {
+          return {
+            success: 200,
+            message: "User subscribed to the topic successfully",
+            data: existingUser[0],
+          };
+        } else {
+          return {
+            success: 500,
+            message: "Unable to save the user subscription",
+          };
+        }
       } else {
         return {
-          success: 500,
-          message: "Unable to save the user subscription",
+          success: 404,
+          message: "No user with the supplied email found",
         };
       }
     } else {
+      console.log("TOPIC NOT PRESENT on 3");
       return {
-        success: 404,
-        message: "No user with the supplied email found",
+        success: 411,
+        message: "Topic Not Present",
       };
     }
   } catch (err) {
@@ -221,27 +230,35 @@ const subscribeToTopic = async (req, res) => {
 const unsubscribeToTopic = async (req, res) => {
   try {
     const { topicId, userEmail } = req.params;
-    const existingUser = await User.find({ email: userEmail }).exec();
-    if (existingUser[0]) {
-      existingUser[0].subscribedTopicIds =
-        existingUser[0].subscribedTopicIds.filter((x) => x != topicId);
-      const query = await User(existingUser[0]).save();
-      if (query) {
-        return {
-          success: 200,
-          message: "User unsubscribed to the topic successfully",
-          data: existingUser[0],
-        };
+    if (await isTopicPresent(topicId)) {
+      const existingUser = await User.find({ email: userEmail }).exec();
+      if (existingUser[0]) {
+        existingUser[0].subscribedTopicIds =
+          existingUser[0].subscribedTopicIds.filter((x) => x != topicId);
+        const query = await User(existingUser[0]).save();
+        if (query) {
+          return {
+            success: 200,
+            message: "User unsubscribed to the topic successfully",
+            data: existingUser[0],
+          };
+        } else {
+          return {
+            success: 422,
+            message: "Unable to remove the user subscription",
+          };
+        }
       } else {
         return {
-          success: 422,
-          message: "Unable to remove the user subscription",
+          success: 404,
+          message: "No user with the supplied email found",
         };
       }
     } else {
+      console.log("TOPIC NOT PRESENT on 3");
       return {
-        success: 404,
-        message: "No user with the supplied email found",
+        success: 411,
+        message: "Topic Not Present",
       };
     }
   } catch (err) {
