@@ -3,6 +3,7 @@ const Topic = require("../model/topic");
 const User = require("../model/user");
 const axios = require("axios");
 const PublishHelper = require("../publishHelper/publishHelper");
+const { BN2URL, BN3URL } = require("../../rendezvousConfig");
 
 const isTopicPresent = async (topicId) => {
   try {
@@ -22,8 +23,8 @@ const isTopicPresent = async (topicId) => {
 const getAllTopics = async (req, res) => {
   try {
     const results = await Topic.find({}).exec();
-    const result2 = await axios.get("http://localhost:5002/api/topic/all");
-    const result3 = await axios.get("http://localhost:5003/api/topic/all");
+    const result2 = await axios.get(`${BN2URL}/api/topic/all`);
+    const result3 = await axios.get(`${BN3URL}/api/topic/all`);
 
     const data3 = result3?.data?.data || [];
     const data2 = result2?.data?.data || [];
@@ -61,10 +62,10 @@ const getAllAvailableTopics = async (req, res) => {
       }).exec();
 
       const result2 = await axios.get(
-        `http://localhost:5002/api/user/${email}/topic/available`
+        `${BN2URL}/api/user/${email}/topic/available`
       );
       const result3 = await axios.get(
-        `http://localhost:5003/api/user/${email}/topic/available`
+        `${BN3URL}/api/user/${email}/topic/available`
       );
 
       const data3 = result3?.data?.data || [];
@@ -100,10 +101,10 @@ const getUserTopics = async (req, res) => {
       }).exec();
 
       const result2 = await axios.get(
-        `http://localhost:5002/api/user/${email}/topic/subscribed`
+        `${BN2URL}/api/user/${email}/topic/subscribed`
       );
       const result3 = await axios.get(
-        `http://localhost:5003/api/user/${email}/topic/subscribed`
+        `${BN3URL}/api/user/${email}/topic/subscribed`
       );
 
       const data3 = result3?.data?.data || [];
@@ -243,13 +244,13 @@ const subscribeToTopic = async (req, res) => {
     } else {
       console.log("TOPIC NOT PRESENT IN 1, HITTING 2");
       const result2 = await axios.get(
-        `http://localhost:5002/api/user/${userEmail}/topic/${topicId}/subscribe`
+        `${BN2URL}/api/user/${userEmail}/topic/${topicId}/subscribe`
       );
       if (result2?.data?.success == 411) {
         // Topic not present in 2
         console.log("TOPIC NOT PRESENT IN 2, HITTING 3");
         const result3 = await axios.get(
-          `http://localhost:5003/api/user/${userEmail}/topic/${topicId}/subscribe`
+          `${BN3URL}/api/user/${userEmail}/topic/${topicId}/subscribe`
         );
         console.log("RESULT FROM 3");
         console.log(result3.data);
@@ -297,13 +298,13 @@ const unsubscribeToTopic = async (req, res) => {
     } else {
       console.log("TOPIC NOT PRESENT IN 1, HITTING 2");
       const result2 = await axios.get(
-        `http://localhost:5002/api/user/${userEmail}/topic/${topicId}/unsubscribe`
+        `${BN2URL}/api/user/${userEmail}/topic/${topicId}/unsubscribe`
       );
       if (result2?.data?.success == 411) {
         // Topic not present in 2
         console.log("TOPIC NOT PRESENT IN 2, HITTING 3");
         const result3 = await axios.get(
-          `http://localhost:5003/api/user/${userEmail}/topic/${topicId}/unsubscribe`
+          `${BN3URL}/api/user/${userEmail}/topic/${topicId}/unsubscribe`
         );
         console.log("RESULT FROM 3");
         console.log(result3.data);

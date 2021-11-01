@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const Rendezvous = require("./rendezvous.js");
+const { CLIENT_URL, MongoURL, SERVER_PORT } = require("./rendezvousConfig.js");
 const fastify = require("fastify")({ logger: true });
-const SERVER_PORT = 5001;
 
 //CORS
 fastify.register(require("fastify-cors"), {
-  origin: ["http://localhost:3000"],
+  origin: [CLIENT_URL],
   method: ["GET", "POST", "PUT", "DELETE"],
 });
 
@@ -25,10 +25,7 @@ fastify.get("/", (req, res) => {
 
 //MongoDB
 mongoose
-  //   .connect("mongodb://mongo:27017/cricketInfo", {
-  // ON DOCKER
-  .connect("mongodb://localhost:27017/cricketInfo", {
-    // ON LOCAL
+  .connect(MongoURL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -38,6 +35,7 @@ mongoose
   .catch((err) => {
     console.log("Error connecting mongodb");
     console.log(err);
+    process.exit(1);
   });
 
 //Server

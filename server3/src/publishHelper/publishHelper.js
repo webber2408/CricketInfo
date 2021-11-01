@@ -1,4 +1,5 @@
 const amqplib = require("amqplib");
+const { RabbitMQURL } = require("../../rendezvousConfig");
 const User = require("../model/user");
 
 const getGlobalConnection = () => {
@@ -39,11 +40,7 @@ const publishMessageHelper = async (topicId, message) => {
 const publishMessage = async (queueId, message) => {
   let { connection, channel } = getGlobalConnection();
   if (!connection || !channel) {
-    connection = await amqplib.connect("amqp://localhost:5672", "heartbeat=60"); // ON LOCAL
-    // connection = await amqplib.connect(
-    //   "amqp://rabbitmq:5672", // ON DOCKER
-    //   "heartbeat=60"
-    // );
+    connection = await amqplib.connect(RabbitMQURL, "heartbeat=60");
     channel = await connection.createChannel();
     global.amqplConnection = connection;
   }

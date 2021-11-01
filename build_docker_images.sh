@@ -15,4 +15,3 @@ docker build -t broker-node-3 .
 # cd ../Publisher3
 # docker build -t cricket-api-publisher-3 .
 cd ..
-docker-compose up --remove-orphans

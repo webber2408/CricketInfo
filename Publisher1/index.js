@@ -67,12 +67,6 @@ var io = require("socket.io")(7001);
 
 app.listen(PORT, () => {
   console.log(`Publisher 1 started on port: ${PORT}`);
-  // var socket = io.connect("http://cricket-api:3004/", {
-  // DOCKER
-  // var socket = io.connect("http://localhost:3001/", {
-  //   // LOCAL
-  //   reconnection: true,
-  // });
 
   io.on("connection", async (socket) => {
     console.log("connected to cricket-api:3004");
@@ -89,14 +83,14 @@ app.listen(PORT, () => {
           countryTeams: teamsByCountry[value],
         };
         var dataFormat = {
-          topicId: "340ad8f0-340d-42a3-ac32-c513f7c2822a",
+          topicId: "6736b7c5-2354-4487-9aca-e2615dfe47b0",
           topicData: topicData,
           isAdvertisement: false,
           cycleCount: 0,
         };
         finalArr.push(dataFormat);
         dataFormat = {
-          topicId: "340ad8f0-340d-42a3-ac32-c513f7c2822a",
+          topicId: "6736b7c5-2354-4487-9aca-e2615dfe47b0",
           topicData: topicData,
           isAdvertisement: true,
           cycleCount: 0,

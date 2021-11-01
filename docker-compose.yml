@@ -10,42 +10,59 @@ services:
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - app-network
   mongo:
     image: mongo:5.0.3
     ports:
       - "27017:27017"
+    networks:
+      - app-network
   cricket-client:
     image: cricket-client
     stdin_open: true
     ports:
       - "3000:3000"
-  cricket-api:
-    image: cricket-api
+  broker-node-1:
+    image: broker-node-1
     stdin_open: true
     restart: always
     ports:
-      - "5000:5000"
-    depends_on:
-      - mongo
-      - rabbitmq
+      - "5001:5001"
+    # depends_on:
+    #   - mongo
+    #   - rabbitmq
+    networks:
+      - app-network
+  broker-node-2:
+    image: broker-node-2
+    stdin_open: true
+    restart: always
+    ports:
+      - "5002:5002"
+    # depends_on:
+    #   - mongo
+    #   - rabbitmq
+    networks:
+      - app-network
+  broker-node-3:
+    image: broker-node-3
+    stdin_open: true
+    restart: always
+    ports:
+      - "5003:5003"
+    # depends_on:
+    #   - mongo
+    #   - rabbitmq
+    networks:
+      - app-network
   cricket-api-publisher-1:
     image: cricket-api-publisher-1
     stdin_open: true
     ports:
-      - "5001:5001"
-    depends_on:
-      - cricket-api
-  cricket-api-publisher-2:
-    image: cricket-api-publisher-2
-    stdin_open: true
-    ports:
-      - "5002:5002"
-    depends_on:
-      - cricket-api
-  cricket-api-publisher-3:
-    image: cricket-api-publisher-3
-    stdin_open: true
-    ports:
-      - "5003:5003"
-    depends_on:
-      - cricket-api
+      - "6001:6001"
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge

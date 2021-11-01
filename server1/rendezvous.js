@@ -1,25 +1,28 @@
 const io = require("socket.io")(3001);
 const ioClient = require("socket.io-client");
-const { APIS } = require("./rendezvousConfig");
+const {
+  APIS,
+  BN2URL_SOCKET,
+  BN3URL_SOCKET,
+  PUBLISHER1_URL,
+} = require("./rendezvousConfig");
 const { register } = require("./src/controller/authenticationController");
 const { isTopicPresent } = require("./src/controller/topicController");
 const { addTopicDataAndPublish } = require("./src/controller/topicController");
 
 const NEIGHBOURS = {
   server2: {
-    addr: "http://localhost:3002/", // ON LOCAL
-    // addr: "http://docker-name:3002/", // ON DOCKER
+    addr: BN2URL_SOCKET,
     title: "server2",
     socket: null,
   },
   server3: {
-    addr: "http://localhost:3003/", // ON LOCAL
-    // addr: "http://docker-name:3003/", // ON DOCKER
+    addr: BN3URL_SOCKET,
     title: "server3",
     socket: null,
   },
   publisher1: {
-    addr: "http://localhost:7001",
+    addr: PUBLISHER1_URL,
     title: "publisher1",
     socket: null,
   },
