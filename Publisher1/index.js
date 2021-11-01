@@ -16,6 +16,9 @@ var teamsByCountry = {
 var countryCodeMap = {
   // indiaId: india
 };
+var stadiumsByVenue = {
+  //  stadiums: venue
+};
 
 function getTeamCountryData(countryRawData, teamRawData) {
   teamsByCountry = {};
@@ -36,10 +39,19 @@ function getTeamCountryData(countryRawData, teamRawData) {
   }
 }
 
+function getStadiumVenueData(stadiumRawData) {
+  stadiumsByVenue = {};
+  for (i in stadiumRawData) {
+    stadiumsByVenue[stadiumRawData[i]["name"]] = stadiumRawData[i]["city"];
+  }
+}
+
 const api_calls = async () => {
   var countriesAPI =
     CONFIG.PUBLISHER_DOMAIN + "countries?api_token=" + CONFIG.API_KEY;
   var teamsAPI = CONFIG.PUBLISHER_DOMAIN + "teams?api_token=" + CONFIG.API_KEY;
+  var venuesAPI =
+    CONFIG.PUBLISHER_DOMAIN + "venues?api_token=" + CONFIG.API_KEY;
   var configCountries = {
     method: "get",
     url: countriesAPI,
@@ -50,16 +62,22 @@ const api_calls = async () => {
     url: teamsAPI,
     headers: {},
   };
-
+  var configStadiums = {
+    method: "get",
+    url: venuesAPI,
+    headers: {},
+  };
   try {
     var countryRawData = await axios(configCountries);
     var teamRawData = await axios(configTeams);
+    var stadiumRawData = await axios(configStadiums);
   } catch (err) {
     console.log("Error", err);
   }
 
   if (!_.isEmpty(countryRawData) && !_.isEmpty(teamRawData)) {
     getTeamCountryData(countryRawData.data?.data, teamRawData.data?.data);
+    getStadiumVenueData(stadiumRawData.data?.data);
   }
 };
 
@@ -76,6 +94,19 @@ app.listen(PORT, () => {
     let finalArr = [];
 
     for (const [key, value] of Object.entries(countryCodeMap)) {
+      let topicData = {
+        countryId: key,
+        countryName: value,
+      };
+      var dataFormat = {
+        topicId: CONFIG.T3_COUNTRY_CRICKET,
+        topicData: topicData,
+        isAdvertisement: false,
+        cycleCount: 0,
+      };
+      finalArr.push(dataFormat);
+      dataFormat.isAdvertisement = true;
+      finalArr.push(dataFormat);
       if (Object.keys(teamsByCountry).find((x) => x == value)) {
         let topicData = {
           countryId: key,
@@ -83,21 +114,32 @@ app.listen(PORT, () => {
           countryTeams: teamsByCountry[value],
         };
         var dataFormat = {
-          topicId: "6736b7c5-2354-4487-9aca-e2615dfe47b0",
+          topicId: CONFIG.T1_TEAMS_BY_COUNTRY,
           topicData: topicData,
           isAdvertisement: false,
           cycleCount: 0,
         };
         finalArr.push(dataFormat);
-        dataFormat = {
-          topicId: "6736b7c5-2354-4487-9aca-e2615dfe47b0",
-          topicData: topicData,
-          isAdvertisement: true,
-          cycleCount: 0,
-        };
+        dataFormat.isAdvertisement = true;
         finalArr.push(dataFormat);
       }
     }
+    for (const [key, value] of Object.entries(stadiumRawData)) {
+      let topicData = {
+        stadium: key,
+        venue: value,
+      };
+      var dataFormat = {
+        topicId: CONFIG.T2_STAD_BY_VENUE,
+        topicData: topicData,
+        isAdvertisement: false,
+        cycleCount: 0,
+      };
+      finalArr.push(dataFormat);
+      dataFormat.isAdvertisement = true;
+      finalArr.push(dataFormat);
+    }
+    console.log(finalArr);
     for (var i = 0; i < 100; i++) {
       let local = i % finalArr.length;
       if (!finalArr[local].isAdvertisement) {
