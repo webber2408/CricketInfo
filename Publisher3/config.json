@@ -1,4 +1,7 @@
 {
   "PUBLISHER_DOMAIN": "https://cricket.sportmonks.com/api/v2.0/",
-  "API_KEY": "uBViwWLePpy9KpBN134UDYnll16Fh0XVLTcjsjemZvMKiL5Acw6DeLIG6BNB"
+  "API_KEY": "uBViwWLePpy9KpBN134UDYnll16Fh0XVLTcjsjemZvMKiL5Acw6DeLIG6BNB",
+  "T7_UMPIRES": "6736b7c5-2354-4487-9aca-e2615dfe47b0",
+  "T8_TOP_TEAMS": "6736b7c5-2354-4487-9aca-e2615dfe47b0",
+  "T9_SCHEDULES": "6736b7c5-2354-4487-9aca-e2615dfe47b0"
 }

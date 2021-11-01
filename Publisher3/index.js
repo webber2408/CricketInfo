@@ -16,6 +16,9 @@ var officialsByCountry = {
 var countryCodeMap = {
   // indiaId: india
 };
+var status = {};
+
+var upcomingSchedules = {};
 
 function getOfficialCountryData(countryRawData, officialRawData) {
   officialsByCountry = {};
@@ -36,12 +39,26 @@ function getOfficialCountryData(countryRawData, officialRawData) {
     }
   }
 }
-
+function getMatchStatus(scoreRawData) {
+  status = {};
+  for (let i in scoreRawData) {
+    status[scoreRawData[i]["id"]] = scoreRawData[i]["note"];
+  }
+}
+function getSchedules(schedulesRawData) {
+  upcomingSchedules = {};
+  for (let i in schedulesRawData) {
+    upcomingSchedules[schedulesRawData[i]["id"]] = schedulesRawData[i]["name"];
+  }
+}
 const api_calls = async () => {
   var countriesAPI =
     CONFIG.PUBLISHER_DOMAIN + "countries?api_token=" + CONFIG.API_KEY;
   var officialsAPI =
     CONFIG.PUBLISHER_DOMAIN + "officials?api_token=" + CONFIG.API_KEY;
+  var fixtures =
+    CONFIG.PUBLISHER_DOMAIN + "fixtures?api_token=" + CONFIG.API_KEY;
+  var matches = CONFIG.PUBLISHER_DOMAIN + "stages?api_token=" + CONFIG.API_KEY;
   var configCountries = {
     method: "get",
     url: countriesAPI,
@@ -52,10 +69,22 @@ const api_calls = async () => {
     url: officialsAPI,
     headers: {},
   };
+  var configFixturesOfficial = {
+    method: "get",
+    url: fixtures,
+    headers: {},
+  };
+  var configSchedules = {
+    method: "get",
+    url: matches,
+    headers: {},
+  };
 
   try {
     var countryRawData = await axios(configCountries);
     var officialsRawData = await axios(configOficials);
+    var scoreRawData = await axios(configFixturesOfficial);
+    var schedulesRawData = await axios(configSchedules);
   } catch (err) {
     console.log("Error", err);
   }
@@ -65,6 +94,8 @@ const api_calls = async () => {
       countryRawData.data?.data,
       officialsRawData.data?.data
     );
+    getMatchStatus(scoreRawData);
+    getSchedules(schedulesRawData);
   }
 };
 
@@ -96,20 +127,45 @@ app.listen(PORT, () => {
           noOfOfficials: officialsByCountry[value].length,
         };
         var dataFormat = {
-          topicId: "f56af9f5-a3da-4ffc-bae0-7a410a88732a",
+          topicId: CONFIG.T7_UMPIRES,
           topicData: topicData,
           isAdvertisement: false,
           cycleCount: 0,
         };
         finalArr.push(dataFormat);
-        dataFormat = {
-          topicId: "f56af9f5-a3da-4ffc-bae0-7a410a88732a",
-          topicData: topicData,
-          isAdvertisement: true,
-          cycleCount: 0,
-        };
+        dataFormat.isAdvertisement = true;
         finalArr.push(dataFormat);
       }
+    }
+    for (const [key, value] of Object.entries(status)) {
+      let topicData = {
+        id: key,
+        result: value,
+      };
+      var dataFormat = {
+        topicId: CONFIG.T8_TOP_TEAMS,
+        topicData: topicData,
+        isAdvertisement: false,
+        cycleCount: 0,
+      };
+      finalArr.push(dataFormat);
+      dataFormat.isAdvertisement = true;
+      finalArr.push(dataFormat);
+    }
+    for (const [key, value] of Object.entries(upcomingSchedules)) {
+      let topicData = {
+        id: key,
+        scheduleName: value,
+      };
+      var dataFormat = {
+        topicId: CONFIG.T8_TOP_TEAMS,
+        topicData: topicData,
+        isAdvertisement: false,
+        cycleCount: 0,
+      };
+      finalArr.push(dataFormat);
+      dataFormat.isAdvertisement = true;
+      finalArr.push(dataFormat);
     }
     for (var i = 0; i < finalArr.length + 100; i++) {
       let local = i % finalArr.length;
