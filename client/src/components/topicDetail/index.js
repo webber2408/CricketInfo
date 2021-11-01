@@ -17,9 +17,8 @@ import "./topicDetail.css";
 const TopicDetail = () => {
   const dispatch = useDispatch();
   const topic = useSelector((state) => state.topic.selectedTopic);
-  const topicLiveData = useSelector((state) =>
-    JSON.parse(state.topic.selectedTopicData)
-  );
+  const topicLiveData = useSelector((state) => state.topic.selectedTopicData);
+  const allTopicData = useSelector((state) => state.topic.allTopicData);
   const userEmail = sessionStorage.getItem("USER_EMAIL");
   const advertisement = useSelector((state) => state.topic.advertisement);
 
@@ -42,6 +41,10 @@ const TopicDetail = () => {
       dispatch(selectTopic(null));
     };
   }, [topic]);
+
+  useEffect(() => {
+    console.log("ALL TOPIC DATA", allTopicData);
+  }, [allTopicData]);
 
   if (!topic) return <></>;
 
@@ -73,22 +76,6 @@ const TopicDetail = () => {
         <h2>{topic.topicName}</h2>
       </div>
       <p>{topic.topicDescription}</p>
-      {topicLiveData &&
-        Object.entries(topicLiveData.newData).map((entry) => {
-          return (
-            <div className="newTopic">
-              <div className="newTopic__heading">
-                <b>
-                  <span>{getEntryTitle(entry[0])}</span>
-                </b>
-                &nbsp; &nbsp;
-                <span>{getEntryData(entry[1])}</span>
-              </div>
-            </div>
-          );
-        })}
-      <br />
-      <br />
       {advertisement && sessionStorage.getItem("showAds") == "true" && (
         <div className="newTopic" style={{ backgroundColor: "#dedede" }}>
           {Object.entries(advertisement).map((entry) => {
@@ -107,6 +94,42 @@ const TopicDetail = () => {
           </Button>
         </div>
       )}
+      <br />
+      <br />
+      {/* {topicLiveData &&
+        Object.entries(topicLiveData.newData).map((entry) => {
+          return (
+            <div className="newTopic">
+              <div className="newTopic__heading">
+                <b>
+                  <span>{getEntryTitle(entry[0])}</span>
+                </b>
+                &nbsp; &nbsp;
+                <span>{getEntryData(entry[1])}</span>
+              </div>
+            </div>
+          );
+        })} */}
+      {allTopicData &&
+        allTopicData.map((x) => {
+          return (
+            <div style={{ marginBottom: "20px", width: "90%" }}>
+              {Object.entries(topicLiveData.newData).map((entry) => {
+                return (
+                  <div className="newTopic">
+                    <div className="newTopic__heading">
+                      <b>
+                        <span>{getEntryTitle(entry[0])}</span>
+                      </b>
+                      &nbsp; &nbsp;
+                      <span>{getEntryData(entry[1])}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
     </div>
   );
 };

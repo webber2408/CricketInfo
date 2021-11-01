@@ -40,16 +40,21 @@ const Rendezvous = () => {
           if (!status) {
             // Rendezvous to neighbours as topic not present in server2
             console.log("RENDEZVOUS TO SERVER 1 & SERVER 3");
+            cycleCount += 1;
             global?.NEIGHBOUR2_SOCKETS?.forEach((socket) => {
               socket.emit("push_from_neighbour", {
                 topicId,
                 topicData,
                 isAdvertisement,
+                cycleCount,
               });
             });
           } else {
+            console.log("CYCLECOUNT => ", cycleCount);
             console.log("FOUND @ SERVER 2");
-            addTopicDataAndPublish(topicId, topicData);
+            if (!isAdvertisement) {
+              addTopicDataAndPublish(topicId, topicData);
+            }
           }
         }
       }

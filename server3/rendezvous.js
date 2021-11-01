@@ -50,7 +50,9 @@ const Rendezvous = () => {
             });
           } else {
             console.log("FOUND @ SERVER 3");
-            addTopicDataAndPublish(topicId, topicData);
+            if (!isAdvertisement) {
+              addTopicDataAndPublish(topicId, topicData);
+            }
           }
         }
       }

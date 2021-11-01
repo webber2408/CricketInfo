@@ -8,7 +8,7 @@ export function subscribeToTopic(topicId, isAdvertisement, callback) {
   stompClient.connect({}, function () {
     if (!isAdvertisement) {
       stompClient.subscribe("queue." + topicId, function (message) {
-        store.dispatch(addSelectedTopicData(message.body));
+        store.dispatch(addSelectedTopicData(JSON.parse(message.body)));
         if (callback) callback();
       });
     } else {

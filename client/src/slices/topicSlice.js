@@ -7,6 +7,7 @@ const initialState = {
   myTopics: [],
   selectedTopic: null,
   selectedTopicData: null,
+  allTopicData: [],
   advertisement: null,
 };
 
@@ -92,9 +93,14 @@ export const topic = createSlice({
     },
     addSelectedTopicData: (state, { payload }) => {
       state.selectedTopicData = payload;
+      state.allTopicData.push(payload);
+      if (state.allTopicData.length > 10) {
+        state.allTopicData = state.allTopicData.splice(-10);
+      }
     },
     resetSelectedTopicData: (state) => {
       state.selectedTopicData = null;
+      state.allTopicData = [];
     },
     addAdvertisement: (state, { payload }) => {
       state.advertisement = payload;

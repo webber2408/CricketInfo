@@ -104,7 +104,7 @@ app.listen(PORT, () => {
         finalArr.push(dataFormat);
       }
     }
-    for (var i = 0; i < finalArr.length + 100; i++) {
+    for (var i = 0; i < 100; i++) {
       let local = i % finalArr.length;
       if (!finalArr[local].isAdvertisement) {
         setTimeout(function () {
