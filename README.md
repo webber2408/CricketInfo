@@ -62,9 +62,15 @@ We will be publishing the app on Docker so that the app is platform independant 
 
 ![](screenshots/PubSub.jpg)
 
+
+
+
 ### Broker Publisher Mapping
 
 ![](screenshots/BrokerInteraction.png)
+
+
+
 
 ### Algorithm Workflow
 
