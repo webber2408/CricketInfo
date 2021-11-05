@@ -87,7 +87,7 @@ app.listen(PORT, () => {
   console.log(`Publisher 1 started on port: ${PORT}`);
 
   io.on("connection", async (socket) => {
-    console.log("connected to cricket-api:3004");
+    console.log("connected to broker node socket");
 
     await api_calls();
 

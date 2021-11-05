@@ -3,7 +3,7 @@ const CONFIG = require("./config.json");
 const _ = require("lodash");
 const express = require("express");
 
-const PORT = 5002;
+const PORT = 6002;
 const app = express();
 
 app.get("/", (req, res) => {
@@ -81,20 +81,13 @@ const api_calls = async () => {
   }
 };
 
-var io = require("socket.io-client");
+var io = require("socket.io")(7002);
 
 app.listen(PORT, () => {
   console.log(`Publisher 2 started on port: ${PORT}`);
 
-  // var socket = io.connect("http://cricket-api:3004/", {
-  // DOCKER
-  var socket = io.connect("http://localhost:3004/", {
-    // LOCAL
-    reconnection: true,
-  });
-
-  socket.on("connect", async () => {
-    console.log("connected to cricket-api:3004");
+  io.on("connection", async (socket) => {
+    console.log("connected to broker socket node");
 
     await api_calls();
 
