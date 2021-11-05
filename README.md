@@ -62,14 +62,16 @@ We will be publishing the app on Docker so that the app is platform independant 
 
 ![](screenshots/PubSub.jpg)
 
+### Broker Publisher Mapping
+
+![](screenshots/BrokerInteraction.jpg)
+
 ### Algorithm Workflow
 
 ![](screenshots/flowchart.png)
 
-
 **26th September,2021:** We have created a simple CRUD (Create,Read,Update,Delete) app that fetches the data from the database and gives us the relevant values.
 We have created a UI where a person is able to see the win percentage of a particular team by clicking on the respective cards. Five API's have been created to create this version.
-
 
 ### Backend Status:
 
@@ -122,11 +124,13 @@ const userSchema = new mongoose.Schema({
 ```
 
 ### RabbitMQ Deployment
+
 Rabbit MQ running queues for 3 topics and one advertisement that gets data from all the three topics.
 
 ![](screenshots/11_RabbitMQ.png)
 
 ### Docker Deployment
+
 ![](screenshots/9_docker.png)
 
 ### Frontend Status:
@@ -172,11 +176,11 @@ Rabbit MQ running queues for 3 topics and one advertisement that gets data from 
 - Topic 2: Team Win Statistics
 
   ![](screenshots/7_StatsOfTeams.png)
-  
+
 - Topic 3: Umpires By Country
 
   ![](screenshots/8_UmpiresByCountry.png)
-  
+
 - Advertisement button toggle
 
   ![](screenshots/10_Profile.png)
