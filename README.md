@@ -58,21 +58,21 @@ We will be publishing the app on Docker so that the app is platform independant 
 
 **5th November,2021:** We have created a full architecture of 3 publishers and n number of subscribers that interact with each other in our pub sub model. Our middleware is RabbitMQ(for time and space uncoupling) which serves as queue to transfer messages from the broker node to the client. The broker node uses rendezvous architecture to transfer messages between each other so that the relevant broker gets the value. The client can subscribe to nine subscriptions and the data will be displayed in his dashboard. Also there are advertisements that pop up in the middle in each topic that lets user know what other data is being displayed in other topics. The user is given the flexibility to turn off or on the adds as he deems fit. The data transferred by the publisher to the broker is also being transferred to the database. The data is transferred into the database only when there is a change in the data, thus preventing replications. We have also provisioned that advertisements are not pushed in the database.
 
-### Architectural Model
+### 1. Architectural Model
 
 ![](screenshots/PubSub.jpg)
 
 
 
 
-### Broker Publisher Mapping
+### 2. Broker Publisher Mapping
 
 ![](screenshots/BrokerInteraction.png)
 
 
 
 
-### Algorithm Workflow
+### 3. Algorithm Workflow
 
 ![](screenshots/flowchart.png)
 
