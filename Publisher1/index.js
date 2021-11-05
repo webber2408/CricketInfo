@@ -105,8 +105,7 @@ app.listen(PORT, () => {
         cycleCount: 0,
       };
       finalArr.push(dataFormat);
-      dataFormat.isAdvertisement = true;
-      finalArr.push(dataFormat);
+      finalArr.push({ ...dataFormat, isAdvertisement: true });
       if (Object.keys(teamsByCountry).find((x) => x == value)) {
         let topicData = {
           countryId: key,
@@ -120,8 +119,7 @@ app.listen(PORT, () => {
           cycleCount: 0,
         };
         finalArr.push(dataFormat);
-        dataFormat.isAdvertisement = true;
-        finalArr.push(dataFormat);
+        finalArr.push({ ...dataFormat, isAdvertisement: true });
       }
     }
     for (const [key, value] of Object.entries(stadiumsByVenue)) {
@@ -136,8 +134,7 @@ app.listen(PORT, () => {
         cycleCount: 0,
       };
       finalArr.push(dataFormat);
-      dataFormat.isAdvertisement = true;
-      finalArr.push(dataFormat);
+      finalArr.push({ ...dataFormat, isAdvertisement: true });
     }
     console.log(finalArr);
     for (var i = 0; i < 100; i++) {

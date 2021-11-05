@@ -105,8 +105,7 @@ app.listen(PORT, () => {
         cycleCount: 0,
       };
       finalArr.push(dataFormat);
-      dataFormat.isAdvertisement = true;
-      finalArr.push(dataFormat);
+      finalArr.push({ ...dataFormat, isAdvertisement: true });
     }
     for (const [key, value] of Object.entries(teamIdMap)) {
       let topicData = {
@@ -120,8 +119,7 @@ app.listen(PORT, () => {
         cycleCount: 0,
       };
       finalArr.push(dataFormat);
-      dataFormat.isAdvertisement = true;
-      finalArr.push(dataFormat);
+      finalArr.push({ ...dataFormat, isAdvertisement: true });
     }
     for (const [key, value] of Object.entries(seasons)) {
       let topicData = {
@@ -135,18 +133,17 @@ app.listen(PORT, () => {
         cycleCount: 0,
       };
       finalArr.push(dataFormat);
-      dataFormat.isAdvertisement = true;
-      finalArr.push(dataFormat);
+      finalArr.push({ ...dataFormat, isAdvertisement: true });
     }
-    for (var i = 0; i < finalArr.length + 100; i++) {
+    for (var i = 0; i < 100; i++) {
       let local = i % finalArr.length;
       if (!finalArr[local].isAdvertisement) {
         setTimeout(function () {
-          socket.emit("publisher_push", finalArr[local]);
+          socket.emit("push_from_neighbour", finalArr[local]);
         }, local * 4000);
       } else if (finalArr[local].isAdvertisement) {
         setTimeout(function () {
-          socket.emit("publisher_push", finalArr[local]);
+          socket.emit("push_from_neighbour", finalArr[local]);
         }, local * 1000);
       }
     }

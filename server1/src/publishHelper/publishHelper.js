@@ -14,6 +14,7 @@ const publishMessageHelper = async (topicId, message) => {
     const users = await User.find({
       subscribedTopicIds: topicId,
     }).exec();
+    console.log("USERS", users);
     if (!users) {
       console.log("Error fetching users, users got undefined");
       return;
