@@ -5,10 +5,10 @@
 This repository contains:
 
 - A client folder.
-- Server files.
+- 3 Server Folders.
 - 3 Publisher folders.
 - Docker file.
-- Docker compose file for dockerizing all the parts.(7 in all)
+- Docker compose file for dockerizing all the parts.(9 in all)
 
 ## Table of Contents
 
@@ -56,7 +56,7 @@ We will be publishing the app on Docker so that the app is platform independant 
 
 ## CurrentStatus
 
-**3rd October,2021:** We have created a full architecture of 3 publishers and n number of subscribers that interact with each other in our pub sub model. Our middleware is RabbitMQ(for time and space uncoupling) which serves as queue to transfer messages from the broker node to the client. The client can subscribe to three subscriptions and the data will be displayed in his dashboard. Also there are advertisements that pop up in the middle in each topic that lets user know what other data is being displayed in other topics. The user is given the flexibility to turn off or on the adds as he deems fit. The data transferred by the publisher to the broker is also being transferred to the database. The data is transferred into the database only when there is a change in the data, thus preventing replications. We have also provisioned that advertisements are not pushed in the database.
+**5th November,2021:** We have created a full architecture of 3 publishers and n number of subscribers that interact with each other in our pub sub model. Our middleware is RabbitMQ(for time and space uncoupling) which serves as queue to transfer messages from the broker node to the client. The broker node uses rendezvous architecture to transfer messages between each other so that the relevant broker gets the value. The client can subscribe to nine subscriptions and the data will be displayed in his dashboard. Also there are advertisements that pop up in the middle in each topic that lets user know what other data is being displayed in other topics. The user is given the flexibility to turn off or on the adds as he deems fit. The data transferred by the publisher to the broker is also being transferred to the database. The data is transferred into the database only when there is a change in the data, thus preventing replications. We have also provisioned that advertisements are not pushed in the database.
 
 ### Architectural Model
 
@@ -70,20 +70,26 @@ We will be publishing the app on Docker so that the app is platform independant 
 
 ![](screenshots/flowchart.png)
 
+<<<<<<< HEAD
 **26th September,2021:** We have created a simple CRUD (Create,Read,Update,Delete) app that fetches the data from the database and gives us the relevant values.
 We have created a UI where a person is able to see the win percentage of a particular team by clicking on the respective cards. Five API's have been created to create this version.
 
+=======
+>>>>>>> 52efacded55b8b5575ce725255573ff0b4d0cbf5
 ### Backend Status:
 
 #### Ports
 
-- Backend: 5000
 - MongoDb: 27017
 - RabbitMq: 5672,15672,61613,15674
-- Publisher1: 5001
-- Publisher2: 5002
-- Publisher3: 5003
-- Websocket: 3004
+- Publisher1: 6001
+- Publisher2: 6002
+- Publisher3: 6003
+- BrokerNode1: 5001
+- BrokerNode2: 5002
+- BrokerNode3: 5003
+- Publisher-Sockets: 7001,7002,7003
+- Broker-Sockets: 3001,3002,3003
 
 #### API's:
 
@@ -94,6 +100,12 @@ We have created a UI where a person is able to see the win percentage of a parti
 - Number of teams in a country: It displays the number of teams in a country.(Uses two api's)
 - Statistics of Team: Displays the win loss percentage of a team.(Uses two api's)
 - Umpires per Country: Displays the number of umpires and count per country.(Uses two api's)
+- Stadiums by Venue: Displays the venures by stadium
+- Countries where cricket is played
+- Top performing cricket teams
+- Name of seasons played in cricket 
+- Status of cricket matches played
+- Schedules of the matches to be played
 
 #### Database Schema:
 
@@ -124,9 +136,16 @@ const userSchema = new mongoose.Schema({
 ```
 
 ### RabbitMQ Deployment
+<<<<<<< HEAD
 
 Rabbit MQ running queues for 3 topics and one advertisement that gets data from all the three topics.
 
+=======
+Number of Subscribers : n
+Number of topics: m
+Advertisements: 1
+Queues in Rabbit MQ: (m * n) + 1
+>>>>>>> 52efacded55b8b5575ce725255573ff0b4d0cbf5
 ![](screenshots/11_RabbitMQ.png)
 
 ### Docker Deployment
@@ -190,18 +209,22 @@ Rabbit MQ running queues for 3 topics and one advertisement that gets data from 
 The following commands are executed from the root directory.
 
 ```sh
- cd client
- docker build -t cricket-client .
- cd ..
- docker build -t cricket-api .
- cd Publisher1
- docker build -t cricket-api-publisher-1 .
- cd ../Publisher2
- docker build -t cricket-api-publisher-2 .
- cd ../Publisher3
- docker build -t cricket-api-publisher-3 .
- cd ..
- docker-compose up --remove-orphans
+  cd client
+  docker build -t cricket-client .
+  cd ../Publisher1
+  docker build -t cricket-api-publisher-1 .
+  cd ../Publisher2
+  docker build -t cricket-api-publisher-2 .
+  cd ../Publisher3
+  docker build -t cricket-api-publisher-3 .
+  cd ../server1
+  docker build -t broker-node-1 .
+  cd ../server2
+  docker build -t broker-node-2 .
+  cd ../server3
+  docker build -t broker-node-3 .
+  cd ..
+  docker-compose up --remove-orphans
 ```
 
 Post RabbitMQ docker deployment, enable Web STOMP by:
