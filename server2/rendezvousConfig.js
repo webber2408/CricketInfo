@@ -31,6 +31,7 @@ const otherNodes = {
 const currentEnv = "docker"; // 'docker'
 const CLIENT_URL = `http://localhost:3000`;
 const SERVER_PORT = "5002";
+const PUBLISHER2_URL = "http://cricket-api-publisher-2:7002";
 
 // DERIVED
 const BN1URL = `http://${brokerNodes.Node1[currentEnv]}:${brokerNodes.Node1.port}`;
@@ -54,4 +55,5 @@ module.exports = {
   BN1URL_SOCKET,
   BN3URL_SOCKET,
   RabbitMQURL,
+  PUBLISHER2_URL,
 };

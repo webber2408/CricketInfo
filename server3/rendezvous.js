@@ -1,6 +1,11 @@
 const io = require("socket.io")(3003);
 const ioClient = require("socket.io-client");
-const { APIS, BN1URL_SOCKET, BN2URL_SOCKET } = require("./rendezvousConfig");
+const {
+  APIS,
+  BN1URL_SOCKET,
+  BN2URL_SOCKET,
+  PUBLISHER3_URL,
+} = require("./rendezvousConfig");
 const { register } = require("./src/controller/authenticationController");
 const { isTopicPresent } = require("./src/controller/topicController");
 const { addTopicDataAndPublish } = require("./src/controller/topicController");
@@ -14,6 +19,11 @@ const NEIGHBOURS = {
   server2: {
     addr: BN2URL_SOCKET,
     title: "server2",
+    socket: null,
+  },
+  publisher3: {
+    addr: PUBLISHER3_URL,
+    title: "publisher3",
     socket: null,
   },
 };
