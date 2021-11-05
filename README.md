@@ -70,12 +70,6 @@ We will be publishing the app on Docker so that the app is platform independant 
 
 ![](screenshots/flowchart.png)
 
-<<<<<<< HEAD
-**26th September,2021:** We have created a simple CRUD (Create,Read,Update,Delete) app that fetches the data from the database and gives us the relevant values.
-We have created a UI where a person is able to see the win percentage of a particular team by clicking on the respective cards. Five API's have been created to create this version.
-
-=======
->>>>>>> 52efacded55b8b5575ce725255573ff0b4d0cbf5
 ### Backend Status:
 
 #### Ports
@@ -136,16 +130,11 @@ const userSchema = new mongoose.Schema({
 ```
 
 ### RabbitMQ Deployment
-<<<<<<< HEAD
-
-Rabbit MQ running queues for 3 topics and one advertisement that gets data from all the three topics.
-
-=======
 Number of Subscribers : n
 Number of topics: m
 Advertisements: 1
 Queues in Rabbit MQ: (m * n) + 1
->>>>>>> 52efacded55b8b5575ce725255573ff0b4d0cbf5
+
 ![](screenshots/11_RabbitMQ.png)
 
 ### Docker Deployment
