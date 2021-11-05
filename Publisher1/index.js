@@ -124,7 +124,7 @@ app.listen(PORT, () => {
         finalArr.push(dataFormat);
       }
     }
-    for (const [key, value] of Object.entries(stadiumRawData)) {
+    for (const [key, value] of Object.entries(stadiumsByVenue)) {
       let topicData = {
         stadium: key,
         venue: value,
