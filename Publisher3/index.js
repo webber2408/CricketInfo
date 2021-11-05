@@ -143,7 +143,7 @@ app.listen(PORT, () => {
         result: value,
       };
       var dataFormat = {
-        topicId: CONFIG.T8_TOP_TEAMS,
+        topicId: CONFIG.T8_CRICKET_STATUS,
         topicData: topicData,
         isAdvertisement: false,
         cycleCount: 0,
@@ -158,7 +158,7 @@ app.listen(PORT, () => {
         scheduleName: value,
       };
       var dataFormat = {
-        topicId: CONFIG.T8_TOP_TEAMS,
+        topicId: CONFIG.T9_SCHEDULES,
         topicData: topicData,
         isAdvertisement: false,
         cycleCount: 0,
