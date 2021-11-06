@@ -11,6 +11,7 @@ const { isTopicPresent } = require("./src/controller/topicController");
 const { addTopicDataAndPublish } = require("./src/controller/topicController");
 const { publishMessage } = require("./src/publishHelper/publishHelper");
 
+// Keeps a list of all the neighbours
 const NEIGHBOURS = {
   server2: {
     addr: BN2URL_SOCKET,
