@@ -1,4 +1,4 @@
-# Cricket Information System (Phase-3 WIP)
+# Cricket Information System (Phase-3)
 
 ![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)
 
