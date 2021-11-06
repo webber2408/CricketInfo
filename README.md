@@ -231,4 +231,12 @@ rabbitmq-plugins enable rabbitmq_web_stomp
 ## Contributors
 
 [@RahulSharma](https://github.com/webber2408).
+- Frontend
+- Middleware (RabbitMQ)
+- Subscriber Rendezvous
+- Database
 [@AruvanshNigam](https://github.com/Aruvansh1997).
+- Backend
+- Publisher Rendezvous
+- Middleware (Socket.io Interations)
+- Database
