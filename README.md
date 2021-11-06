@@ -1,4 +1,5 @@
-# Cricket Information System (Phase-3)
+# Distributed Systems Project (CSE-574) -[Authors](#contributors)
+# Cricket Information System (Phase-3) 
 
 ![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)
 
@@ -17,7 +18,6 @@ This repository contains:
 - [Prerequisites](#prerequisites)
 - [CurrentStatus](#currentstatus)
 - [Installation](#installation)
-- [Working](#working)
 - [Contributing](#contributors)
 
 ## Background
