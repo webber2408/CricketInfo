@@ -1,4 +1,4 @@
-# Cricket Information System (Phase-3 WIP)
+# Cricket Information System (Phase-3)
 
 ![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)
 
@@ -137,9 +137,14 @@ const userSchema = new mongoose.Schema({
 
 ### RabbitMQ Deployment
 Number of Subscribers : n
+
 Number of topics: m
+
 Advertisements: 1
+
 Queues in Rabbit MQ: (m * n) + 1
+
+Queue Name:  queue.[USER_EMAIL]_[TOPIC_UNIQUE_UUID]
 
 ![](screenshots/11_RabbitMQ.png)
 
@@ -231,4 +236,13 @@ rabbitmq-plugins enable rabbitmq_web_stomp
 ## Contributors
 
 [@RahulSharma](https://github.com/webber2408).
+- Frontend
+- Middleware (RabbitMQ)
+- Subscriber Rendezvous
+- Database
+
 [@AruvanshNigam](https://github.com/Aruvansh1997).
+- Backend
+- Publisher Rendezvous
+- Middleware (Socket.io Interations)
+- Database
