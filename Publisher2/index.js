@@ -42,7 +42,16 @@ function getAllSeasons(seasonRawData) {
     seasons[seasonRawData[i]["id"]] = seasonRawData[i]["name"];
   }
 }
+function shuffle(sourceArray) {
+  for (var i = 0; i < sourceArray.length - 1; i++) {
+    var j = i + Math.floor(Math.random() * (sourceArray.length - i));
 
+    var temp = sourceArray[j];
+    sourceArray[j] = sourceArray[i];
+    sourceArray[i] = temp;
+  }
+  return sourceArray;
+}
 const api_calls = async () => {
   var standingsAPI =
     CONFIG.PUBLISHER_DOMAIN +
@@ -92,7 +101,6 @@ app.listen(PORT, () => {
     await api_calls();
 
     let finalArr = [];
-
     for (const [key, value] of Object.entries(winLossPercentage)) {
       let topicData = {
         teamName: key,
@@ -135,7 +143,8 @@ app.listen(PORT, () => {
       finalArr.push(dataFormat);
       finalArr.push({ ...dataFormat, isAdvertisement: true });
     }
-    for (var i = 0; i < 100; i++) {
+    // finalArr = shuffle(finalArr);
+    for (var i = 0; i < finalArr.length * 10; i++) {
       let local = i % finalArr.length;
       if (!finalArr[local].isAdvertisement) {
         setTimeout(function () {

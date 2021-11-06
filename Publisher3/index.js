@@ -94,23 +94,36 @@ const api_calls = async () => {
       countryRawData.data?.data,
       officialsRawData.data?.data
     );
-    getMatchStatus(scoreRawData);
-    getSchedules(schedulesRawData);
+    getMatchStatus(scoreRawData.data?.data);
+    getSchedules(schedulesRawData.data?.data);
   }
 };
 
 var io = require("socket.io")(7003);
+function shuffle(sourceArray) {
+  for (var i = 0; i < sourceArray.length - 1; i++) {
+    var j = i + Math.floor(Math.random() * (sourceArray.length - i));
 
+    var temp = sourceArray[j];
+    sourceArray[j] = sourceArray[i];
+    sourceArray[i] = temp;
+  }
+  return sourceArray;
+}
 app.listen(PORT, () => {
   console.log(`Publisher 3 started on port: ${PORT}`);
 
   io.on("connection", async (socket) => {
     console.log("connected to broker socket node");
-
     await api_calls();
 
     let finalArr = [];
-
+    console.log(
+      "lengthhssss3",
+      Object.keys(countryCodeMap).length,
+      Object.keys(status).length,
+      Object.keys(upcomingSchedules).length
+    );
     for (const [key, value] of Object.entries(countryCodeMap)) {
       if (Object.keys(officialsByCountry).find((x) => x == value)) {
         let topicData = {
@@ -157,6 +170,8 @@ app.listen(PORT, () => {
       finalArr.push(dataFormat);
       finalArr.push({ ...dataFormat, isAdvertisement: true });
     }
+    // finalArr = shuffle(finalArr);
+    console.log("Data form 3----", finalArr);
     for (var i = 0; i < 100; i++) {
       let local = i % finalArr.length;
       if (!finalArr[local].isAdvertisement) {

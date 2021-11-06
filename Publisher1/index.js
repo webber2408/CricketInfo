@@ -81,6 +81,17 @@ const api_calls = async () => {
   }
 };
 
+function shuffle(sourceArray) {
+  for (var i = 0; i < sourceArray.length - 1; i++) {
+    var j = i + Math.floor(Math.random() * (sourceArray.length - i));
+
+    var temp = sourceArray[j];
+    sourceArray[j] = sourceArray[i];
+    sourceArray[i] = temp;
+  }
+  return sourceArray;
+}
+
 var io = require("socket.io")(7001);
 
 app.listen(PORT, () => {
@@ -88,11 +99,29 @@ app.listen(PORT, () => {
 
   io.on("connection", async (socket) => {
     console.log("connected to broker node socket");
-
     await api_calls();
 
     let finalArr = [];
-
+    console.log(
+      "lengthhssss1",
+      Object.keys(stadiumsByVenue).length,
+      Object.keys(countryCodeMap).length,
+      Object.keys(teamsByCountry).length
+    );
+    for (const [key, value] of Object.entries(stadiumsByVenue)) {
+      let topicData = {
+        stadium: key,
+        venue: value,
+      };
+      var dataFormat = {
+        topicId: CONFIG.T2_STAD_BY_VENUE,
+        topicData: topicData,
+        isAdvertisement: false,
+        cycleCount: 0,
+      };
+      finalArr.push(dataFormat);
+      finalArr.push({ ...dataFormat, isAdvertisement: true });
+    }
     for (const [key, value] of Object.entries(countryCodeMap)) {
       let topicData = {
         countryId: key,
@@ -122,23 +151,11 @@ app.listen(PORT, () => {
         finalArr.push({ ...dataFormat, isAdvertisement: true });
       }
     }
-    for (const [key, value] of Object.entries(stadiumsByVenue)) {
-      let topicData = {
-        stadium: key,
-        venue: value,
-      };
-      var dataFormat = {
-        topicId: CONFIG.T2_STAD_BY_VENUE,
-        topicData: topicData,
-        isAdvertisement: false,
-        cycleCount: 0,
-      };
-      finalArr.push(dataFormat);
-      finalArr.push({ ...dataFormat, isAdvertisement: true });
-    }
-    console.log(finalArr);
+
+    // finalArr = shuffle(finalArr);
     for (var i = 0; i < 100; i++) {
       let local = i % finalArr.length;
+
       if (!finalArr[local].isAdvertisement) {
         setTimeout(function () {
           socket.emit("push_from_neighbour", finalArr[local]);

@@ -9,6 +9,7 @@ const {
 const { register } = require("./src/controller/authenticationController");
 const { isTopicPresent } = require("./src/controller/topicController");
 const { addTopicDataAndPublish } = require("./src/controller/topicController");
+const { publishMessage } = require("./src/publishHelper/publishHelper");
 
 const NEIGHBOURS = {
   server2: {
@@ -61,6 +62,8 @@ const Rendezvous = () => {
             console.log("FOUND @ SERVER 1");
             if (!isAdvertisement) {
               addTopicDataAndPublish(topicId, topicData);
+            } else {
+              publishMessage("advertisement", topicData);
             }
           }
         }
