@@ -235,6 +235,7 @@ rabbitmq-plugins enable rabbitmq_web_stomp
 - Middleware (RabbitMQ)
 - Subscriber Rendezvous
 - Database
+
 [@AruvanshNigam](https://github.com/Aruvansh1997).
 - Backend
 - Publisher Rendezvous
