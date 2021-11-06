@@ -20,6 +20,7 @@ var seasons = {
   // seasonId:seasonName
 };
 
+// post calculation of API
 function getWinLossPercentage(standingsRawData, teamRawData) {
   winLossPercentage = {};
   teamIdMap = {};
@@ -42,16 +43,8 @@ function getAllSeasons(seasonRawData) {
     seasons[seasonRawData[i]["id"]] = seasonRawData[i]["name"];
   }
 }
-function shuffle(sourceArray) {
-  for (var i = 0; i < sourceArray.length - 1; i++) {
-    var j = i + Math.floor(Math.random() * (sourceArray.length - i));
 
-    var temp = sourceArray[j];
-    sourceArray[j] = sourceArray[i];
-    sourceArray[i] = temp;
-  }
-  return sourceArray;
-}
+// Creating API urls for different topics
 const api_calls = async () => {
   var standingsAPI =
     CONFIG.PUBLISHER_DOMAIN +
@@ -90,6 +83,7 @@ const api_calls = async () => {
   }
 };
 
+// opening a socket to collect to broker
 var io = require("socket.io")(7002);
 
 app.listen(PORT, () => {
@@ -143,7 +137,7 @@ app.listen(PORT, () => {
       finalArr.push(dataFormat);
       finalArr.push({ ...dataFormat, isAdvertisement: true });
     }
-    // finalArr = shuffle(finalArr);
+    // sending data after every 4 seconds from the publisher to the broker
     for (var i = 0; i < finalArr.length * 10; i++) {
       let local = i % finalArr.length;
       if (!finalArr[local].isAdvertisement) {

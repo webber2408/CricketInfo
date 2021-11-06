@@ -20,6 +20,7 @@ var status = {};
 
 var upcomingSchedules = {};
 
+// post calculation of API
 function getOfficialCountryData(countryRawData, officialRawData) {
   officialsByCountry = {};
   countryCodeMap = {};
@@ -51,6 +52,8 @@ function getSchedules(schedulesRawData) {
     upcomingSchedules[schedulesRawData[i]["id"]] = schedulesRawData[i]["name"];
   }
 }
+
+// Creating API urls for different topics
 const api_calls = async () => {
   var countriesAPI =
     CONFIG.PUBLISHER_DOMAIN + "countries?api_token=" + CONFIG.API_KEY;
@@ -99,6 +102,7 @@ const api_calls = async () => {
   }
 };
 
+// connecting to broker node
 var io = require("socket.io")(7003);
 function shuffle(sourceArray) {
   for (var i = 0; i < sourceArray.length - 1; i++) {
@@ -170,8 +174,7 @@ app.listen(PORT, () => {
       finalArr.push(dataFormat);
       finalArr.push({ ...dataFormat, isAdvertisement: true });
     }
-    // finalArr = shuffle(finalArr);
-    console.log("Data form 3----", finalArr);
+    // sending data after every 4 seconds from the publisher to the broker
     for (var i = 0; i < 100; i++) {
       let local = i % finalArr.length;
       if (!finalArr[local].isAdvertisement) {

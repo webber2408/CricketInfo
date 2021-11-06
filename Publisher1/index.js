@@ -20,6 +20,7 @@ var stadiumsByVenue = {
   //  stadiums: venue
 };
 
+// post calculation of API
 function getTeamCountryData(countryRawData, teamRawData) {
   teamsByCountry = {};
   countryCodeMap = {};
@@ -46,6 +47,7 @@ function getStadiumVenueData(stadiumRawData) {
   }
 }
 
+// Creating API urls for different topics
 const api_calls = async () => {
   var countriesAPI =
     CONFIG.PUBLISHER_DOMAIN + "countries?api_token=" + CONFIG.API_KEY;
@@ -81,17 +83,7 @@ const api_calls = async () => {
   }
 };
 
-function shuffle(sourceArray) {
-  for (var i = 0; i < sourceArray.length - 1; i++) {
-    var j = i + Math.floor(Math.random() * (sourceArray.length - i));
-
-    var temp = sourceArray[j];
-    sourceArray[j] = sourceArray[i];
-    sourceArray[i] = temp;
-  }
-  return sourceArray;
-}
-
+// opening a socket to connect to broker
 var io = require("socket.io")(7001);
 
 app.listen(PORT, () => {
@@ -102,12 +94,6 @@ app.listen(PORT, () => {
     await api_calls();
 
     let finalArr = [];
-    console.log(
-      "lengthhssss1",
-      Object.keys(stadiumsByVenue).length,
-      Object.keys(countryCodeMap).length,
-      Object.keys(teamsByCountry).length
-    );
     for (const [key, value] of Object.entries(stadiumsByVenue)) {
       let topicData = {
         stadium: key,
@@ -152,7 +138,7 @@ app.listen(PORT, () => {
       }
     }
 
-    // finalArr = shuffle(finalArr);
+    // sending data after every 4 seconds from the publisher to the broker
     for (var i = 0; i < 100; i++) {
       let local = i % finalArr.length;
 
