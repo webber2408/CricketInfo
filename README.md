@@ -137,9 +137,14 @@ const userSchema = new mongoose.Schema({
 
 ### RabbitMQ Deployment
 Number of Subscribers : n
+
 Number of topics: m
+
 Advertisements: 1
+
 Queues in Rabbit MQ: (m * n) + 1
+
+Queue Name:  queue.[USER_EMAIL]_[TOPIC_UNIQUE_UUID]
 
 ![](screenshots/11_RabbitMQ.png)
 
