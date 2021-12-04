@@ -2,8 +2,9 @@ const axios = require("axios");
 const CONFIG = require("./config.json");
 const _ = require("lodash");
 const express = require("express");
+const { Kafka } = require("kafkajs");
 
-const PORT = 5002;
+const PORT = 7002;
 const app = express();
 
 app.get("/", (req, res) => {
@@ -16,6 +17,10 @@ var winLossPercentage = {
 var teamIdMap = {
   // teamId: teamName
 };
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
 
 function getWinLossPercentage(standingsRawData, teamRawData) {
   winLossPercentage = {};
@@ -62,53 +67,62 @@ const api_calls = async () => {
   }
 };
 
-var io = require("socket.io-client");
+app.listen(PORT, async () => {
+  // Connect Producer
+  var kafka = new Kafka({
+    clientId: "myapp",
+    // brokers: ["localhost:19093"], // ON LOCAL
+    brokers: ["kafka-2:19093"], // ON DOCKER
+  });
+  const producer = kafka.producer();
+  await producer.connect();
 
-app.listen(PORT, () => {
-  console.log(`Publisher 2 started on port: ${PORT}`);
+  await api_calls();
 
-  var socket = io.connect("http://cricket-api:3004/", {
-    // DOCKER
-    // var socket = io.connect("http://localhost:3004/", { // LOCAL
-    reconnection: true,
+  let finalArr = [];
+
+  for (const [key, value] of Object.entries(winLossPercentage)) {
+    let topicData = {
+      teamName: key,
+      winLossPercentage: value,
+    };
+    var dataFormat = {
+      topicId: "e296ce0a-d87d-48c9-89ac-f7e40fbbbef6",
+      topicData: topicData,
+      isAdvertisement: false,
+    };
+    finalArr.push(dataFormat);
+    dataFormat = {
+      topicId: "e296ce0a-d87d-48c9-89ac-f7e40fbbbef6",
+      topicData: topicData,
+      isAdvertisement: true,
+    };
+    finalArr.push(dataFormat);
+  }
+
+  // for (var i = 0; i < finalArr.length + 100; i++) {
+  //   let local = i % finalArr.length;
+  //   if (!finalArr[local].isAdvertisement) {
+  //     setTimeout(function () {
+  //       socket.emit("publisher_push", finalArr[local]);
+  //     }, local * 4000);
+  //   } else if (finalArr[local].isAdvertisement) {
+  //     setTimeout(function () {
+  //       socket.emit("publisher_push", finalArr[local]);
+  //     }, local * 1000);
+  //   }
+  // }
+
+  const partition = getRandomInt(2);
+  await producer.send({
+    topic: "Publisher-1 Topic",
+    messages: [
+      {
+        value: "Hello from publisher 2",
+        partition: partition,
+      },
+    ],
   });
 
-  socket.on("connect", async () => {
-    console.log("connected to cricket-api:3004");
-
-    await api_calls();
-
-    let finalArr = [];
-
-    for (const [key, value] of Object.entries(winLossPercentage)) {
-      let topicData = {
-        teamName: key,
-        winLossPercentage: value,
-      };
-      var dataFormat = {
-        topicId: "e296ce0a-d87d-48c9-89ac-f7e40fbbbef6",
-        topicData: topicData,
-        isAdvertisement: false,
-      };
-      finalArr.push(dataFormat);
-      dataFormat = {
-        topicId: "e296ce0a-d87d-48c9-89ac-f7e40fbbbef6",
-        topicData: topicData,
-        isAdvertisement: true,
-      };
-      finalArr.push(dataFormat);
-    }
-    for (var i = 0; i < finalArr.length + 100; i++) {
-      let local = i % finalArr.length;
-      if (!finalArr[local].isAdvertisement) {
-        setTimeout(function () {
-          socket.emit("publisher_push", finalArr[local]);
-        }, local * 4000);
-      } else if (finalArr[local].isAdvertisement) {
-        setTimeout(function () {
-          socket.emit("publisher_push", finalArr[local]);
-        }, local * 1000);
-      }
-    }
-  });
+  console.log("Message sent successfully from Pub-2!");
 });
