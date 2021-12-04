@@ -2,8 +2,9 @@ const axios = require("axios");
 const CONFIG = require("./config.json");
 const _ = require("lodash");
 const express = require("express");
+const { Kafka } = require("kafkajs");
 
-const PORT = 5003;
+const PORT = 7003;
 const app = express();
 
 app.get("/", (req, res) => {
@@ -16,6 +17,10 @@ var officialsByCountry = {
 var countryCodeMap = {
   // indiaId: india
 };
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
 
 function getOfficialCountryData(countryRawData, officialRawData) {
   officialsByCountry = {};
@@ -68,57 +73,67 @@ const api_calls = async () => {
   }
 };
 
-var io = require("socket.io-client");
+app.listen(PORT, async () => {
+  // Connect Producer
+  var kafka = new Kafka({
+    clientId: "myapp",
+    // brokers: ["localhost:19093"], // ON LOCAL
+    brokers: ["kafka-3:19094"], // ON DOCKER
+  });
+  const producer = kafka.producer();
 
-app.listen(PORT, () => {
-  console.log(`Publisher 3 started on port: ${PORT}`);
+  await producer.connect();
 
-  var socket = io.connect("http://cricket-api:3004/", {
-    // DOCKER
-    // var socket = io.connect("http://localhost:3004/", { // LOCAL
-    reconnection: true,
+  await api_calls();
+
+  let finalArr = [];
+
+  for (const [key, value] of Object.entries(countryCodeMap)) {
+    if (Object.keys(officialsByCountry).find((x) => x == value)) {
+      let topicData = {
+        countryId: key,
+        countryName: value,
+        officials: officialsByCountry[value],
+        noOfOfficials: officialsByCountry[value].length,
+      };
+      var dataFormat = {
+        topicId: "f56af9f5-a3da-4ffc-bae0-7a410a88732a",
+        topicData: topicData,
+        isAdvertisement: false,
+      };
+      finalArr.push(dataFormat);
+      dataFormat = {
+        topicId: "f56af9f5-a3da-4ffc-bae0-7a410a88732a",
+        topicData: topicData,
+        isAdvertisement: true,
+      };
+      finalArr.push(dataFormat);
+    }
+  }
+
+  // for (var i = 0; i < finalArr.length + 100; i++) {
+  //   let local = i % finalArr.length;
+  //   if (!finalArr[local].isAdvertisement) {
+  //     setTimeout(function () {
+  //       socket.emit("publisher_push", finalArr[local]);
+  //     }, local * 4000);
+  //   } else if (finalArr[local].isAdvertisement) {
+  //     setTimeout(function () {
+  //       socket.emit("publisher_push", finalArr[local]);
+  //     }, local * 1000);
+  //   }
+  // }
+
+  const partition = getRandomInt(2);
+  await producer.send({
+    topic: "Publisher-3Topic",
+    messages: [
+      {
+        value: "Hello from publisher 3",
+        partition: partition,
+      },
+    ],
   });
 
-  socket.on("connect", async () => {
-    console.log("connected to cricket-api:3004");
-
-    await api_calls();
-
-    let finalArr = [];
-
-    for (const [key, value] of Object.entries(countryCodeMap)) {
-      if (Object.keys(officialsByCountry).find((x) => x == value)) {
-        let topicData = {
-          countryId: key,
-          countryName: value,
-          officials: officialsByCountry[value],
-          noOfOfficials: officialsByCountry[value].length,
-        };
-        var dataFormat = {
-          topicId: "f56af9f5-a3da-4ffc-bae0-7a410a88732a",
-          topicData: topicData,
-          isAdvertisement: false,
-        };
-        finalArr.push(dataFormat);
-        dataFormat = {
-          topicId: "f56af9f5-a3da-4ffc-bae0-7a410a88732a",
-          topicData: topicData,
-          isAdvertisement: true,
-        };
-        finalArr.push(dataFormat);
-      }
-    }
-    for (var i = 0; i < finalArr.length + 100; i++) {
-      let local = i % finalArr.length;
-      if (!finalArr[local].isAdvertisement) {
-        setTimeout(function () {
-          socket.emit("publisher_push", finalArr[local]);
-        }, local * 4000);
-      } else if (finalArr[local].isAdvertisement) {
-        setTimeout(function () {
-          socket.emit("publisher_push", finalArr[local]);
-        }, local * 1000);
-      }
-    }
-  });
+  console.log("Message sent successfully from Pub-3!");
 });

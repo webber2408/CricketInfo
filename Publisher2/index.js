@@ -115,7 +115,7 @@ app.listen(PORT, async () => {
 
   const partition = getRandomInt(2);
   await producer.send({
-    topic: "Publisher-1 Topic",
+    topic: "Publisher-2Topic",
     messages: [
       {
         value: "Hello from publisher 2",

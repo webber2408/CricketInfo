@@ -33,6 +33,17 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
       ZOOKEEPER_INIT_LIMIT: 5
       ZOOKEEPER_SYNC_LIMIT: 2
+  zookeeper3:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper3
+    ports:
+      - "2183:2183"
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2183
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
   # mongo:
   #   image: mongo:5.0.3
   #   ports:
@@ -79,6 +90,20 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19093
     ports:
       - 19093:19093
+  kafka-3:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka3
+    # network_mode: host
+    depends_on:
+      - zookeeper3
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper3:2183
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19094
+    ports:
+      - 19094:19094
   cricket-api-publisher-1:
     image: cricket-api-publisher-1
     stdin_open: true
@@ -97,6 +122,15 @@ services:
     depends_on:
       # - cricket-api
       - kafka-2
+  cricket-api-publisher-3:
+    image: cricket-api-publisher-3
+    stdin_open: true
+    restart: always
+    ports:
+      - "7003:7003"
+    depends_on:
+      # - cricket-api
+      - kafka-3
   # cricket-api-publisher-2:
   #   image: cricket-api-publisher-2
   #   stdin_open: true
