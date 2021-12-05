@@ -1,109 +1,74 @@
-version: "3"
+version: "2"
 services:
-  # rabbitmq:
-  #   image: rabbitmq:3.8-management-alpine
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"
-  #     - "61613:61613"
-  #     - "15674:15674"
-  #   volumes:
-  #     - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-  #     - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-
-  zookeeper1:
+  zookeeper-1:
     image: confluentinc/cp-zookeeper:latest
-    container_name: zookeeper1
-    ports:
-      - "2181:2181"
     environment:
-      ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-      ZOOKEEPER_INIT_LIMIT: 5
-      ZOOKEEPER_SYNC_LIMIT: 2
-  zookeeper2:
-    image: confluentinc/cp-zookeeper:latest
-    container_name: zookeeper2
+      ZOOKEEPER_TICK_TIME: 200000
     ports:
-      - "2182:2182"
-    environment:
-      ZOOKEEPER_SERVER_ID: 1
-      ZOOKEEPER_CLIENT_PORT: 2182
-      ZOOKEEPER_TICK_TIME: 2000
-      ZOOKEEPER_INIT_LIMIT: 5
-      ZOOKEEPER_SYNC_LIMIT: 2
-  zookeeper3:
+      - 22181:2181
+
+  zookeeper-2:
     image: confluentinc/cp-zookeeper:latest
-    container_name: zookeeper3
-    ports:
-      - "2183:2183"
     environment:
-      ZOOKEEPER_SERVER_ID: 1
-      ZOOKEEPER_CLIENT_PORT: 2183
-      ZOOKEEPER_TICK_TIME: 2000
-      ZOOKEEPER_INIT_LIMIT: 5
-      ZOOKEEPER_SYNC_LIMIT: 2
-  # mongo:
-  #   image: mongo:5.0.3
-  #   ports:
-  #     - "27017:27017"
-  # cricket-client:
-  #   image: cricket-client
-  #   stdin_open: true
-  #   ports:
-  #     - "3000:3000"
-  # cricket-api:
-  #   image: cricket-api
-  #   stdin_open: true
-  #   restart: always
-  #   ports:
-  #     - "5000:5000"
-  #   depends_on:
-  #     - mongo
-  #     # - rabbitmq
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 200000
+    ports:
+      - 32181:2181
+
+  zookeeper-3:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 200000
+    ports:
+      - 42181:2181
+
   kafka-1:
     image: confluentinc/cp-kafka:latest
-    container_name: kafka1
-    # network_mode: host
     depends_on:
-      - zookeeper1
-    environment:
-      KAFKA_ADVERTISED_HOST_NAME: localhost
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19092
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
     ports:
-      - 19092:19092
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
   kafka-2:
     image: confluentinc/cp-kafka:latest
-    container_name: kafka2
-    # network_mode: host
     depends_on:
-      - zookeeper2
-    environment:
-      KAFKA_ADVERTISED_HOST_NAME: localhost
-      KAFKA_BROKER_ID: 2
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper2:2182
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19093
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
     ports:
-      - 19093:19093
+      - 39092:39092
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:9092,PLAINTEXT_HOST://localhost:39092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
   kafka-3:
     image: confluentinc/cp-kafka:latest
-    container_name: kafka3
-    # network_mode: host
     depends_on:
-      - zookeeper3
-    environment:
-      KAFKA_ADVERTISED_HOST_NAME: localhost
-      KAFKA_BROKER_ID: 3
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper3:2183
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19094
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
     ports:
-      - 19094:19094
+      - 49092:49092
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:9092,PLAINTEXT_HOST://localhost:49092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
   cricket-api-publisher-1:
     image: cricket-api-publisher-1
     stdin_open: true
@@ -131,17 +96,14 @@ services:
     depends_on:
       # - cricket-api
       - kafka-3
-  # cricket-api-publisher-2:
-  #   image: cricket-api-publisher-2
-  #   stdin_open: true
-  #   ports:
-  #     - "5002:5002"
-  #   depends_on:
-  #     - cricket-api
-  # cricket-api-publisher-3:
-  #   image: cricket-api-publisher-3
-  #   stdin_open: true
-  #   ports:
-  #     - "5003:5003"
-  #   depends_on:
-  #     - cricket-api
+  consumer-1:
+    image: consumer-1
+    stdin_open: true
+    restart: always
+    ports:
+      - "8001:8001"
+    depends_on:
+      # - cricket-api
+      - kafka-1
+      - kafka-2
+      # - kafka-3

@@ -4,111 +4,120 @@ const _ = require("lodash");
 const express = require("express");
 const { Kafka } = require("kafkajs");
 
-const PORT = 7003;
+const PORT = 7002;
 const app = express();
 
 app.get("/", (req, res) => {
-  res.send("Hello from Publisher-3");
+  res.send("Hello from Publisher-2");
 });
 
-var officialsByCountry = {
-  // india: [],
+var winLossPercentage = {
+  // india: winloss,
 };
-var countryCodeMap = {
-  // indiaId: india
+var teamIdMap = {
+  // teamId: teamName
 };
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-function getOfficialCountryData(countryRawData, officialRawData) {
-  officialsByCountry = {};
-  countryCodeMap = {};
-  for (let i in countryRawData) {
-    countryCodeMap[countryRawData[i]["id"]] = countryRawData[i]["name"];
+function getWinLossPercentage(standingsRawData, teamRawData) {
+  winLossPercentage = {};
+  teamIdMap = {};
+  for (let i in teamRawData) {
+    teamIdMap[teamRawData[i]["id"]] = teamRawData[i]["name"];
   }
 
-  for (i in officialRawData) {
-    let country = countryCodeMap[officialRawData[i]["country_id"]];
-    let official =
-      officialRawData[i]["firstname"] + " " + officialRawData[i]["lastname"];
-    if (!country) continue;
-    if (official in officialsByCountry) {
-      officialsByCountry[country].push(official);
-    } else {
-      officialsByCountry[country] = [official];
-    }
+  for (let i in standingsRawData) {
+    let team = teamIdMap[standingsRawData[i]["team_id"]];
+    if (!team) continue;
+    winLossPercentage[team] =
+      (standingsRawData[i]["won"] * 100) /
+      (standingsRawData[i]["won"] + standingsRawData[i]["lost"]);
   }
 }
 
 const api_calls = async () => {
-  var countriesAPI =
-    CONFIG.PUBLISHER_DOMAIN + "countries?api_token=" + CONFIG.API_KEY;
-  var officialsAPI =
-    CONFIG.PUBLISHER_DOMAIN + "officials?api_token=" + CONFIG.API_KEY;
-  var configCountries = {
+  var standingsAPI =
+    CONFIG.PUBLISHER_DOMAIN +
+    "standings/season/525?api_token=" +
+    CONFIG.API_KEY;
+  var teamsAPI = CONFIG.PUBLISHER_DOMAIN + "teams?api_token=" + CONFIG.API_KEY;
+  var configStandings = {
     method: "get",
-    url: countriesAPI,
+    url: standingsAPI,
     headers: {},
   };
-  var configOficials = {
+  var configTeams = {
     method: "get",
-    url: officialsAPI,
+    url: teamsAPI,
     headers: {},
   };
 
   try {
-    var countryRawData = await axios(configCountries);
-    var officialsRawData = await axios(configOficials);
+    var standingsRawData = await axios(configStandings);
+    var teamRawData = await axios(configTeams);
   } catch (err) {
     console.log("Error", err);
   }
 
-  if (!_.isEmpty(countryRawData) && !_.isEmpty(officialsRawData)) {
-    getOfficialCountryData(
-      countryRawData.data?.data,
-      officialsRawData.data?.data
-    );
+  if (!_.isEmpty(standingsRawData) && !_.isEmpty(teamRawData)) {
+    getWinLossPercentage(standingsRawData.data?.data, teamRawData.data?.data);
   }
 };
 
 app.listen(PORT, async () => {
   // Connect Producer
-  var kafka = new Kafka({
-    clientId: "myapp",
-    // brokers: ["localhost:19093"], // ON LOCAL
-    brokers: ["kafka-3:19094"], // ON DOCKER
-  });
-  const producer = kafka.producer();
+  try {
+    var kafka = new Kafka({
+      clientId: "myapp",
+      // brokers: ["localhost:19092"], // ON LOCAL
+      brokers: ["kafka-3:9092"], // ON DOCKER
+    });
 
-  await producer.connect();
+    // Create topic
+    var admin = kafka.admin();
+    await admin.connect();
+    await admin.createTopics({
+      topics: [
+        {
+          topic: "Publisher-3Topic",
+          numPartitions: 2,
+        },
+      ],
+    });
+    await admin.disconnect();
 
-  await api_calls();
+    // Connect producer
+    var producer = kafka.producer();
+    await producer.connect();
+  } catch (error) {
+    process.exit(0);
+  }
+
+  console.log("PRODUCER-RAHUL", producer);
+
+  // await api_calls();
 
   let finalArr = [];
-
-  for (const [key, value] of Object.entries(countryCodeMap)) {
-    if (Object.keys(officialsByCountry).find((x) => x == value)) {
-      let topicData = {
-        countryId: key,
-        countryName: value,
-        officials: officialsByCountry[value],
-        noOfOfficials: officialsByCountry[value].length,
-      };
-      var dataFormat = {
-        topicId: "f56af9f5-a3da-4ffc-bae0-7a410a88732a",
-        topicData: topicData,
-        isAdvertisement: false,
-      };
-      finalArr.push(dataFormat);
-      dataFormat = {
-        topicId: "f56af9f5-a3da-4ffc-bae0-7a410a88732a",
-        topicData: topicData,
-        isAdvertisement: true,
-      };
-      finalArr.push(dataFormat);
-    }
+  for (const [key, value] of Object.entries(winLossPercentage)) {
+    let topicData = {
+      teamName: key,
+      winLossPercentage: value,
+    };
+    var dataFormat = {
+      topicId: "e296ce0a-d87d-48c9-89ac-f7e40fbbbef6",
+      topicData: topicData,
+      isAdvertisement: false,
+    };
+    finalArr.push(dataFormat);
+    dataFormat = {
+      topicId: "e296ce0a-d87d-48c9-89ac-f7e40fbbbef6",
+      topicData: topicData,
+      isAdvertisement: true,
+    };
+    finalArr.push(dataFormat);
   }
 
   // for (var i = 0; i < finalArr.length + 100; i++) {
@@ -124,16 +133,38 @@ app.listen(PORT, async () => {
   //   }
   // }
 
-  const partition = getRandomInt(2);
-  await producer.send({
-    topic: "Publisher-3Topic",
-    messages: [
-      {
-        value: "Hello from publisher 3",
-        partition: partition,
-      },
-    ],
-  });
+  let arrayOfPromises = [];
 
-  console.log("Message sent successfully from Pub-3!");
+  for (let i = 0; i < 2; i++) {
+    arrayOfPromises = [
+      ...arrayOfPromises,
+      new Promise(async (resolve, reject) => {
+        try {
+          const partition = getRandomInt(2);
+          const result = await producer.send({
+            topic: "Publisher-3Topic",
+            messages: [
+              {
+                value: "Hello from publisher 3",
+                partition: partition,
+              },
+            ],
+          });
+          resolve(result);
+        } catch (err) {
+          reject("Error sending message from publisher 3 " + err);
+        }
+      }),
+    ];
+  }
+
+  Promise.all(arrayOfPromises)
+    .then(() => {
+      console.log("ALL MESSAGES SENT FROM PUBLISHER 3");
+    })
+    .catch((err) => {
+      console.log("ERROR FROM PUB-3 " + err);
+    });
+
+  console.log("Reached end in pub-3");
 });
