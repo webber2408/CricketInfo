@@ -66,18 +66,18 @@ const start = async () => {
 start();
 
 // Publisher Connection & Updation
-io.on("connection", function (socket) {
-  console.log("CONNECTED PUBLISHER => ", socket.client.id);
-  socket.on("publisher_push", ({ topicId, topicData, isAdvertisement }) => {
-    console.log("PUBLISHER DATA", topicData);
-    if (!isAdvertisement) {
-      addTopicDataAndPublish(topicId, topicData);
-    } else {
-      // console.log("HERE");
-      PublishHelper.publishMessage("advertisement", {
-        ...topicData,
-        isAdvertisement,
-      });
-    }
-  });
-});
+// io.on("connection", function (socket) {
+//   console.log("CONNECTED PUBLISHER => ", socket.client.id);
+//   socket.on("publisher_push", ({ topicId, topicData, isAdvertisement }) => {
+//     console.log("PUBLISHER DATA", topicData);
+//     if (!isAdvertisement) {
+//       addTopicDataAndPublish(topicId, topicData);
+//     } else {
+//       // console.log("HERE");
+//       PublishHelper.publishMessage("advertisement", {
+//         ...topicData,
+//         isAdvertisement,
+//       });
+//     }
+//   });
+// });

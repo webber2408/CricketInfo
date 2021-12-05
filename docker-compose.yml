@@ -9,42 +9,42 @@ services:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-  zookeeper2:
-    image: confluentinc/cp-zookeeper:latest
-    container_name: zookeeper2
+  # zookeeper2:
+  #   image: confluentinc/cp-zookeeper:latest
+  #   container_name: zookeeper2
+  #   ports:
+  #     - "2182:2182"
+  #   environment:
+  #     ZOOKEEPER_SERVER_ID: 2
+  #     ZOOKEEPER_CLIENT_PORT: 2182
+  #     ZOOKEEPER_TICK_TIME: 4000
+  # zookeeper3:
+  #   image: confluentinc/cp-zookeeper:latest
+  #   container_name: zookeeper3
+  #   ports:
+  #     - "2183:2183"
+  #   environment:
+  #     ZOOKEEPER_SERVER_ID: 3
+  #     ZOOKEEPER_CLIENT_PORT: 2183
+  #     ZOOKEEPER_TICK_TIME: 8000
+  mongo:
+    image: mongo:5.0.3
     ports:
-      - "2182:2182"
-    environment:
-      ZOOKEEPER_SERVER_ID: 2
-      ZOOKEEPER_CLIENT_PORT: 2182
-      ZOOKEEPER_TICK_TIME: 4000
-  zookeeper3:
-    image: confluentinc/cp-zookeeper:latest
-    container_name: zookeeper3
+      - "27017:27017"
+  cricket-client:
+    image: cricket-client
+    stdin_open: true
     ports:
-      - "2183:2183"
-    environment:
-      ZOOKEEPER_SERVER_ID: 3
-      ZOOKEEPER_CLIENT_PORT: 2183
-      ZOOKEEPER_TICK_TIME: 8000
-  # mongo:
-  #   image: mongo:5.0.3
-  #   ports:
-  #     - "27017:27017"
-  # cricket-client:
-  #   image: cricket-client
-  #   stdin_open: true
-  #   ports:
-  #     - "3000:3000"
-  # cricket-api:
-  #   image: cricket-api
-  #   stdin_open: true
-  #   restart: always
-  #   ports:
-  #     - "5000:5000"
-  #   depends_on:
-  #     - mongo
-  #     # - rabbitmq
+      - "3000:3000"
+  cricket-api:
+    image: cricket-api
+    stdin_open: true
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+      # - rabbitmq
   kafka-1:
     image: confluentinc/cp-kafka:latest
     container_name: kafka-1
@@ -72,11 +72,11 @@ services:
     image: confluentinc/cp-kafka:latest
     container_name: kafka-2
     depends_on:
-      - zookeeper2
+      - zookeeper1
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka-2
       KAFKA_BROKER_ID: 2
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper2:2182
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:9093, PLAINTEXT_HOST://localhost:19093
@@ -95,11 +95,11 @@ services:
     image: confluentinc/cp-kafka:latest
     container_name: kafka-3
     depends_on:
-      - zookeeper3
+      - zookeeper1
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka-3
       KAFKA_BROKER_ID: 3
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper3:2183
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:9094, PLAINTEXT_HOST://localhost:19094

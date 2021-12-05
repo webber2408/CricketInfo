@@ -158,16 +158,18 @@ app.listen(PORT, async () => {
       ...arrayOfPromises,
       new Promise(async (resolve, reject) => {
         try {
-          const result = await producer.send({
-            topic: "Publisher-1Topic",
-            messages: [
-              {
-                value: JSON.stringify("FROM PUBLISHER 1 " + finalArr[local]),
-                partition: 1,
-              },
-            ],
-          });
-          resolve(result);
+          setTimeout(async () => {
+            const result = await producer.send({
+              topic: "Publisher-1Topic",
+              messages: [
+                {
+                  value: JSON.stringify("FROM PUBLISHER 1 " + finalArr[local]),
+                  partition: 1,
+                },
+              ],
+            });
+            resolve(result);
+          }, local * 4000);
         } catch (err) {
           reject("Error sending message from publisher 1 " + err);
         }
