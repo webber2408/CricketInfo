@@ -1,16 +1,5 @@
 version: "3"
 services:
-  # rabbitmq:
-  #   image: rabbitmq:3.8-management-alpine
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"
-  #     - "61613:61613"
-  #     - "15674:15674"
-  #   volumes:
-  #     - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-  #     - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-
   zookeeper1:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper1
@@ -20,30 +9,24 @@ services:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-      ZOOKEEPER_INIT_LIMIT: 5
-      ZOOKEEPER_SYNC_LIMIT: 2
   zookeeper2:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper2
     ports:
       - "2182:2182"
     environment:
-      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_SERVER_ID: 2
       ZOOKEEPER_CLIENT_PORT: 2182
-      ZOOKEEPER_TICK_TIME: 2000
-      ZOOKEEPER_INIT_LIMIT: 5
-      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_TICK_TIME: 4000
   zookeeper3:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper3
     ports:
       - "2183:2183"
     environment:
-      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_SERVER_ID: 3
       ZOOKEEPER_CLIENT_PORT: 2183
-      ZOOKEEPER_TICK_TIME: 2000
-      ZOOKEEPER_INIT_LIMIT: 5
-      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_TICK_TIME: 8000
   # mongo:
   #   image: mongo:5.0.3
   #   ports:
@@ -64,84 +47,111 @@ services:
   #     # - rabbitmq
   kafka-1:
     image: confluentinc/cp-kafka:latest
-    container_name: kafka1
-    # network_mode: host
+    container_name: kafka-1
     depends_on:
       - zookeeper1
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ADVERTISED_HOST_NAME: kafka-1
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:9092, PLAINTEXT_HOST://localhost:19092
+      KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "true"
+      # KAFKA_GROUP_MAX_SESSION_TIMEOUT_MS: 30000000
+      # KAFKA_GROUP_MIN_SESSION_TIMEOUT_MS: 6000
     ports:
       - 19092:19092
+    # healthcheck:
+    #   test:
+    #     ["CMD", "kafka-topics.sh", "--list", "--zookeeper", "zookeeper1:2181"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 10
   kafka-2:
     image: confluentinc/cp-kafka:latest
-    container_name: kafka2
-    # network_mode: host
+    container_name: kafka-2
     depends_on:
       - zookeeper2
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ADVERTISED_HOST_NAME: kafka-2
       KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: zookeeper2:2182
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:9093, PLAINTEXT_HOST://localhost:19093
+      KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "true"
+      # KAFKA_GROUP_MAX_SESSION_TIMEOUT_MS: 30000000
+      # KAFKA_GROUP_MIN_SESSION_TIMEOUT_MS: 6000
     ports:
       - 19093:19093
+    # healthcheck:
+    #   test:
+    #     ["CMD", "kafka-topics.sh", "--list", "--zookeeper", "zookeeper2:2182"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 10
   kafka-3:
     image: confluentinc/cp-kafka:latest
-    container_name: kafka3
-    # network_mode: host
+    container_name: kafka-3
     depends_on:
       - zookeeper3
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ADVERTISED_HOST_NAME: kafka-3
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: zookeeper3:2183
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:9094, PLAINTEXT_HOST://localhost:19094
+      KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "true"
+      # KAFKA_GROUP_MAX_SESSION_TIMEOUT_MS: 30000000
+      # KAFKA_GROUP_MIN_SESSION_TIMEOUT_MS: 6000
     ports:
       - 19094:19094
+    # healthcheck:
+    #   test:
+    #     ["CMD", "kafka-topics.sh", "--list", "--zookeeper", "zookeeper3:2183"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 10
+  consumer-1:
+    image: consumer-1
+    stdin_open: true
+    restart: always
+    ports:
+      - "8001:8001"
+    depends_on:
+      # - cricket-api
+      - kafka-1
+      - kafka-2
+      - kafka-3
   cricket-api-publisher-1:
     image: cricket-api-publisher-1
     stdin_open: true
     restart: always
     ports:
       - "7001:7001"
-    depends_on:
-      # - cricket-api
-      - kafka-1
+    # depends_on:
+    #   - cricket-api
+    #   kafka-1:
+    #     condition: service_healthy
   cricket-api-publisher-2:
     image: cricket-api-publisher-2
     stdin_open: true
     restart: always
     ports:
       - "7002:7002"
-    depends_on:
-      # - cricket-api
-      - kafka-2
+    # depends_on:
+    #   - cricket-api
+    #   kafka-2:
+    #     condition: service_healthy
   cricket-api-publisher-3:
     image: cricket-api-publisher-3
     stdin_open: true
     restart: always
     ports:
       - "7003:7003"
-    depends_on:
-      # - cricket-api
-      - kafka-3
-  # cricket-api-publisher-2:
-  #   image: cricket-api-publisher-2
-  #   stdin_open: true
-  #   ports:
-  #     - "5002:5002"
-  #   depends_on:
-  #     - cricket-api
-  # cricket-api-publisher-3:
-  #   image: cricket-api-publisher-3
-  #   stdin_open: true
-  #   ports:
-  #     - "5003:5003"
-  #   depends_on:
-  #     - cricket-api
+    # depends_on:
+    #   - cricket-api
+    #   kafka-3:
+    #     condition: service_healthy

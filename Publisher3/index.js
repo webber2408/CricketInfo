@@ -75,19 +75,36 @@ const api_calls = async () => {
 
 app.listen(PORT, async () => {
   // Connect Producer
-  var kafka = new Kafka({
-    clientId: "myapp",
-    // brokers: ["localhost:19093"], // ON LOCAL
-    brokers: ["kafka-3:19094"], // ON DOCKER
-  });
-  const producer = kafka.producer();
+  try {
+    var kafka = new Kafka({
+      clientId: "myapp",
+      // brokers: ["localhost:19092"], // ON LOCAL
+      brokers: ["kafka-3:9094"], // ON DOCKER
+    });
 
-  await producer.connect();
+    // Create topic
+    var admin = kafka.admin();
+    await admin.connect();
+    await admin.createTopics({
+      topics: [
+        {
+          topic: "Publisher-3Topic",
+          numPartitions: 2,
+        },
+      ],
+    });
+    await admin.disconnect();
+
+    // Connect producer
+    var producer = kafka.producer();
+    await producer.connect();
+  } catch (error) {
+    process.exit(0);
+  }
 
   await api_calls();
 
   let finalArr = [];
-
   for (const [key, value] of Object.entries(countryCodeMap)) {
     if (Object.keys(officialsByCountry).find((x) => x == value)) {
       let topicData = {
@@ -124,16 +141,38 @@ app.listen(PORT, async () => {
   //   }
   // }
 
-  const partition = getRandomInt(2);
-  await producer.send({
-    topic: "Publisher-3Topic",
-    messages: [
-      {
-        value: "Hello from publisher 3",
-        partition: partition,
-      },
-    ],
-  });
+  let arrayOfPromises = [];
 
-  console.log("Message sent successfully from Pub-3!");
+  for (let i = 0; i < 10; i++) {
+    let local = i % finalArr.length;
+    arrayOfPromises = [
+      ...arrayOfPromises,
+      new Promise(async (resolve, reject) => {
+        try {
+          const result = await producer.send({
+            topic: "Publisher-3Topic",
+            messages: [
+              {
+                value: JSON.stringify("FROM PUBLISHER 3 " + finalArr[local]),
+                partition: 1,
+              },
+            ],
+          });
+          resolve(result);
+        } catch (err) {
+          reject("Error sending message from publisher 3 " + err);
+        }
+      }),
+    ];
+  }
+
+  Promise.all(arrayOfPromises)
+    .then(() => {
+      console.log("ALL MESSAGES SENT FROM PUBLISHER 3");
+    })
+    .catch((err) => {
+      console.log("ERROR FROM PUB-3 " + err);
+    });
+
+  console.log("Reached end in pub-3");
 });
