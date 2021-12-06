@@ -88,7 +88,7 @@ app.listen(PORT, async () => {
     await admin.createTopics({
       topics: [
         {
-          topic: "Publisher-3Topic",
+          topic: "46b70ec9-3e91-441c-98d0-21942fc410b0",
           numPartitions: 2,
         },
       ],
@@ -114,13 +114,13 @@ app.listen(PORT, async () => {
         noOfOfficials: officialsByCountry[value].length,
       };
       var dataFormat = {
-        topicId: "f56af9f5-a3da-4ffc-bae0-7a410a88732a",
+        topicId: "",
         topicData: topicData,
         isAdvertisement: false,
       };
       finalArr.push(dataFormat);
       dataFormat = {
-        topicId: "f56af9f5-a3da-4ffc-bae0-7a410a88732a",
+        topicId: "",
         topicData: topicData,
         isAdvertisement: true,
       };
@@ -150,10 +150,10 @@ app.listen(PORT, async () => {
       new Promise(async (resolve, reject) => {
         try {
           const result = await producer.send({
-            topic: "Publisher-3Topic",
+            topic: "46b70ec9-3e91-441c-98d0-21942fc410b0",
             messages: [
               {
-                value: JSON.stringify("FROM PUBLISHER 3 " + finalArr[local]),
+                value: JSON.stringify(finalArr[local]),
                 partition: 1,
               },
             ],

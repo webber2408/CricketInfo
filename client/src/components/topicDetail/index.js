@@ -34,7 +34,7 @@ const TopicDetail = () => {
   useEffect(() => {
     if (topic) {
       subscribeToTopic(topic.topicId, false);
-      subscribeToTopic(null, true);
+      // subscribeToTopic(null, true);
     }
 
     return () => {
@@ -74,7 +74,8 @@ const TopicDetail = () => {
       </div>
       <p>{topic.topicDescription}</p>
       {topicLiveData &&
-        Object.entries(topicLiveData.newData).map((entry) => {
+        topicLiveData.topicData &&
+        Object.entries(topicLiveData.topicData).map((entry) => {
           return (
             <div className="newTopic">
               <div className="newTopic__heading">
@@ -89,7 +90,7 @@ const TopicDetail = () => {
         })}
       <br />
       <br />
-      {advertisement && sessionStorage.getItem("showAds") == "true" && (
+      {/* {advertisement && sessionStorage.getItem("showAds") == "true" && (
         <div className="newTopic" style={{ backgroundColor: "#dedede" }}>
           {Object.entries(advertisement).map((entry) => {
             return (
@@ -106,7 +107,7 @@ const TopicDetail = () => {
             Stop Receiving Ads?
           </Button>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
