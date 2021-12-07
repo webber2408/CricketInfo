@@ -193,7 +193,14 @@ docker build -t cricket-api .
 docker-compose up --remove-orphans
 ```
 
+
 ## Contributors
 
 [@RahulSharma](https://github.com/webber2408).
+- Frontend
+- KAFKA Consumer
+
 [@AruvanshNigam](https://github.com/Aruvansh1997).
+- Publisher
+- KAFKA Producer
+
