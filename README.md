@@ -8,7 +8,7 @@ This repository contains:
 - Server files.
 - 3 Publisher folders.
 - Docker file.
-- Docker compose file for dockerizing all the parts.(7 in all)
+- Docker compose file for dockerizing all the parts.(10 in all)
 
 ## Table of Contents
 
@@ -22,16 +22,15 @@ This repository contains:
 
 ## Background
 
-We aim to create a distributed system that notifes the user about various cricketing statistics presently going on. The user will have the flexibilty to choose the type of notifications it desires and the system will only send the relevant information to it.
+We aim to create a distributed system that notifes the user about various cricketing statistics presently going on. The user will have the flexibilty to choose the type of notifications it desires and the system will only send the relevant information to it. We will be using KAFKA as our core to make this pub sub architecture.
 We will be publishing the app on Docker so that the app is platform independant and can be used ubiquitously.
 
-## WebStack
+## WebStack 
 
 - Front-End Development: React, Redux, Web Stomp, Web Socket
-- Back-End Development : Node JS, socket-io, mongoose
+- Back-End Development : KAFKA,Node JS, mongoose
 - Database: MongoDB
 - Deployment : Docker
-- Middleware : RabbitMQ
 
 ## Prerequisites:
 
@@ -52,23 +51,15 @@ We will be publishing the app on Docker so that the app is platform independant 
 - [redux-thunk](https://github.com/reduxjs/redux-thunk)
 - [docker](https://www.docker.com/)
 - [socket.io](https://socket.io/)
-- [RabbitMQ](https://www.rabbitmq.com/)
+- [KAFKA](https://kafka.js.org/)
 
 ## CurrentStatus
 
-**3rd October,2021:** We have created a full architecture of 3 publishers and n number of subscribers that interact with each other in our pub sub model. Our middleware is RabbitMQ(for time and space uncoupling) which serves as queue to transfer messages from the broker node to the client. The client can subscribe to three subscriptions and the data will be displayed in his dashboard. Also there are advertisements that pop up in the middle in each topic that lets user know what other data is being displayed in other topics. The user is given the flexibility to turn off or on the adds as he deems fit. The data transferred by the publisher to the broker is also being transferred to the database. The data is transferred into the database only when there is a change in the data, thus preventing replications. We have also provisioned that advertisements are not pushed in the database.
+**7th December,2021:** We have created a full architecture of 3 Kakfka broker nodes and n number of subscribers that interact with each other in our pub sub model. The client can subscribe to three subscriptions and the data will be displayed in his dashboard. The three kafka broker nodes are connected to a single zookeeper that is responsible for managing and coordination between these nodes. The publisher extracts the data from the live api and pushes the data into the respective kafka broker nodes with the help of the zookeeper. When the consumer pulls the data for a particular subscribed topic the zookeeper facilitates the request by extracting the data from the appropriate kafka broker node. For every topic we have created two partitions that will help in replication of data and thus fault tolerance. The KAFKA comsumer and the producer communicate via sockets to exchange messages. 
 
 ### Architectural Model
 
 ![](screenshots/PubSub.jpg)
-
-### Algorithm Workflow
-
-![](screenshots/flowchart.png)
-
-
-**26th September,2021:** We have created a simple CRUD (Create,Read,Update,Delete) app that fetches the data from the database and gives us the relevant values.
-We have created a UI where a person is able to see the win percentage of a particular team by clicking on the respective cards. Five API's have been created to create this version.
 
 
 ### Backend Status:
@@ -76,12 +67,15 @@ We have created a UI where a person is able to see the win percentage of a parti
 #### Ports
 
 - Backend: 5000
+- Backend Socket: 5004
 - MongoDb: 27017
-- RabbitMq: 5672,15672,61613,15674
-- Publisher1: 5001
-- Publisher2: 5002
-- Publisher3: 5003
-- Websocket: 3004
+- Publisher1: 7001
+- Publisher2: 7002
+- Publisher3: 7003
+- ZooKeeper: 2181
+- Kafka-Broker1: 19092
+- Kakfa-Broker2: 19093
+- Kafka-Broker3: 19094
 
 #### API's:
 
@@ -121,10 +115,10 @@ const userSchema = new mongoose.Schema({
  });
 ```
 
-### RabbitMQ Deployment
-Rabbit MQ running queues for 3 topics and one advertisement that gets data from all the three topics.
+### KAFKA Deployment
+Visualization of KAFKA is done using CONDUKTOR.
 
-![](screenshots/11_RabbitMQ.png)
+![](screenshots/11_KAFKA.png)
 
 ### Docker Deployment
 ![](screenshots/9_docker.png)
@@ -140,8 +134,7 @@ Rabbit MQ running queues for 3 topics and one advertisement that gets data from 
 - A subscriber can create his profile on the page using email address.
 - A user can login and check the subscriptions available.
 - The user can subscribe or unsubscribe to the subscriptions.
-- On clicking the subscribed topics the data will be visible along with advertisements.
-- User can opt out to recieve advertisements or opt in.
+- On clicking the subscribed topics the data will be visible.
 
 #### Screenshots
 
@@ -165,7 +158,7 @@ Rabbit MQ running queues for 3 topics and one advertisement that gets data from 
 
   ![](screenshots/5_YourSubs.png)
 
-- Going to the subscription page of topic one (Teams available in a country) where you can see advertisements and its unsubscribe button
+- Going to the subscription page of topic one (Teams available in a country) 
 
   ![](screenshots/6_SubscriptionPage.png)
 
@@ -186,24 +179,18 @@ Rabbit MQ running queues for 3 topics and one advertisement that gets data from 
 The following commands are executed from the root directory.
 
 ```sh
- cd client
- docker build -t cricket-client .
- cd ..
- docker build -t cricket-api .
- cd Publisher1
- docker build -t cricket-api-publisher-1 .
- cd ../Publisher2
- docker build -t cricket-api-publisher-2 .
- cd ../Publisher3
- docker build -t cricket-api-publisher-3 .
- cd ..
- docker-compose up --remove-orphans
-```
-
-Post RabbitMQ docker deployment, enable Web STOMP by:
-
-```sh
-rabbitmq-plugins enable rabbitmq_web_stomp
+docker-compose down
+cd Publisher1
+docker build -t cricket-api-publisher-1 .
+cd ../Publisher2
+docker build -t cricket-api-publisher-2 .
+cd ../Publisher3
+docker build -t cricket-api-publisher-3 .
+cd ../client
+docker build -t cricket-client .
+cd ..
+docker build -t cricket-api .
+docker-compose up --remove-orphans
 ```
 
 ## Contributors
