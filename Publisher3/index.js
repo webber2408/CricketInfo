@@ -88,7 +88,7 @@ app.listen(PORT, async () => {
     await admin.createTopics({
       topics: [
         {
-          topic: "46b70ec9-3e91-441c-98d0-21942fc410b0",
+          topic: CONFIG.TOPIC_ID,
           numPartitions: 2,
         },
       ],
@@ -127,30 +127,16 @@ app.listen(PORT, async () => {
       finalArr.push(dataFormat);
     }
   }
-
-  // for (var i = 0; i < finalArr.length + 100; i++) {
-  //   let local = i % finalArr.length;
-  //   if (!finalArr[local].isAdvertisement) {
-  //     setTimeout(function () {
-  //       socket.emit("publisher_push", finalArr[local]);
-  //     }, local * 4000);
-  //   } else if (finalArr[local].isAdvertisement) {
-  //     setTimeout(function () {
-  //       socket.emit("publisher_push", finalArr[local]);
-  //     }, local * 1000);
-  //   }
-  // }
-
   let arrayOfPromises = [];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 1000; i++) {
     let local = i % finalArr.length;
     arrayOfPromises = [
       ...arrayOfPromises,
       new Promise(async (resolve, reject) => {
         try {
           const result = await producer.send({
-            topic: "46b70ec9-3e91-441c-98d0-21942fc410b0",
+            topic: CONFIG.TOPIC_ID,
             messages: [
               {
                 value: JSON.stringify(finalArr[local]),

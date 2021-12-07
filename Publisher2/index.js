@@ -82,7 +82,7 @@ app.listen(PORT, async () => {
     await admin.createTopics({
       topics: [
         {
-          topic: "e0f68c60-cce3-4b18-8404-8145c1465108",
+          topic: CONFIG.TOPIC_ID,
           numPartitions: 2,
         },
       ],
@@ -96,7 +96,7 @@ app.listen(PORT, async () => {
     process.exit(0);
   }
 
-  console.log("PRODUCER-RAHUL", producer);
+  console.log("PRODUCER", producer);
 
   await api_calls();
 
@@ -120,29 +120,16 @@ app.listen(PORT, async () => {
     finalArr.push(dataFormat);
   }
 
-  // for (var i = 0; i < finalArr.length + 100; i++) {
-  //   let local = i % finalArr.length;
-  //   if (!finalArr[local].isAdvertisement) {
-  //     setTimeout(function () {
-  //       socket.emit("publisher_push", finalArr[local]);
-  //     }, local * 4000);
-  //   } else if (finalArr[local].isAdvertisement) {
-  //     setTimeout(function () {
-  //       socket.emit("publisher_push", finalArr[local]);
-  //     }, local * 1000);
-  //   }
-  // }
-
   let arrayOfPromises = [];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 1000; i++) {
     let local = i % finalArr.length;
     arrayOfPromises = [
       ...arrayOfPromises,
       new Promise(async (resolve, reject) => {
         try {
           const result = await producer.send({
-            topic: "e0f68c60-cce3-4b18-8404-8145c1465108",
+            topic: CONFIG.TOPIC_ID,
             messages: [
               {
                 value: JSON.stringify(finalArr[local]),

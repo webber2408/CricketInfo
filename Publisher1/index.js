@@ -83,7 +83,7 @@ app.listen(PORT, async () => {
     await admin.createTopics({
       topics: [
         {
-          topic: "175bebb4-e985-497c-80be-784c687340c0",
+          topic: CONFIG.TOPIC_ID,
           numPartitions: 2,
         },
       ],
@@ -97,7 +97,7 @@ app.listen(PORT, async () => {
     process.exit(0);
   }
 
-  console.log("PRODUCER-RAHUL", producer);
+  // console.log("PRODUCER-ARUVANSH", producer);
 
   // Make API Calls
   await api_calls();
@@ -126,33 +126,9 @@ app.listen(PORT, async () => {
     }
   }
 
-  // for (var i = 0; i < 10; i++) {
-  //   let local = i % finalArr.length;
-  //   if (!finalArr[local].isAdvertisement) {
-  //     setTimeout(function () {
-  //       const partition = getRandomInt(2);
-  //       producer.send({
-  //         topic: "",
-  //         messages: [
-  //           {
-  //             value: "Hello from publisher 1",
-  //             partition: partition,
-  //           },
-  //         ],
-  //       });
-  //     }, local * 4000);
-  //   }
-  //   // Ads
-  //   // else if (finalArr[local].isAdvertisement) {
-  //   //   setTimeout(function () {
-  //   //     socket.emit("publisher_push", finalArr[local]);
-  //   //   }, local * 1000);
-  //   // }
-  // }
-
   let arrayOfPromises = [];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 1000; i++) {
     let local = i % finalArr.length;
     arrayOfPromises = [
       ...arrayOfPromises,
@@ -160,7 +136,7 @@ app.listen(PORT, async () => {
         try {
           setTimeout(async () => {
             const result = await producer.send({
-              topic: "175bebb4-e985-497c-80be-784c687340c0",
+              topic: CONFIG.TOPIC_ID,
               messages: [
                 {
                   value: JSON.stringify(finalArr[local]),

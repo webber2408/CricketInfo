@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const CONFIG = require("./config.json");
 const { Kafka } = require("kafkajs");
 const io = require("socket.io")(5004, {
   cors: {
@@ -81,7 +82,7 @@ const getKafka1Data = async (callback) => {
   await consumer.connect();
   // Topic 5
   await consumer.subscribe({
-    topic: "175bebb4-e985-497c-80be-784c687340c0",
+    topic: CONFIG.TOPIC_ID_1,
     fromBeginning: true,
   });
 
@@ -105,7 +106,7 @@ const getKafka2Data = async (callback) => {
   await consumer.connect();
   // Topic 4
   await consumer.subscribe({
-    topic: "e0f68c60-cce3-4b18-8404-8145c1465108",
+    topic: CONFIG.TOPIC_ID_2,
     fromBeginning: true,
   });
 
@@ -130,7 +131,7 @@ const getKafka3Data = async (callback) => {
 
   // Topic 2
   await consumer.subscribe({
-    topic: "46b70ec9-3e91-441c-98d0-21942fc410b0",
+    topic: CONFIG.TOPIC_ID_3,
     fromBeginning: true,
   });
 
@@ -150,7 +151,7 @@ io.on("connection", function (socket) {
   socket.on("subscribe-topic", ({ topicId }) => {
     console.log("SUBSCRIBE REQUEST FOR TOPIC " + topicId);
     switch (topicId) {
-      case "175bebb4-e985-497c-80be-784c687340c0":
+      case CONFIG.TOPIC_ID_1:
         getKafka1Data((message) => {
           console.log("RECEIVED MESSAGE " + message);
           socket.emit("kafka-message-" + topicId, {
@@ -158,7 +159,7 @@ io.on("connection", function (socket) {
           });
         });
         break;
-      case "e0f68c60-cce3-4b18-8404-8145c1465108":
+      case CONFIG.TOPIC_ID_2:
         getKafka2Data((message) => {
           console.log("RECEIVED MESSAGE " + message);
           socket.emit("kafka-message-" + topicId, {
@@ -166,7 +167,7 @@ io.on("connection", function (socket) {
           });
         });
         break;
-      case "46b70ec9-3e91-441c-98d0-21942fc410b0":
+      case CONFIG.TOPIC_ID_3:
         getKafka3Data((message) => {
           console.log("RECEIVED MESSAGE " + message);
           socket.emit("kafka-message-" + topicId, {
