@@ -25,7 +25,7 @@ This repository contains:
 We aim to create a distributed system that notifes the user about various cricketing statistics presently going on. The user will have the flexibilty to choose the type of notifications it desires and the system will only send the relevant information to it. We will be using KAFKA as our core to make this pub sub architecture.
 We will be publishing the app on Docker so that the app is platform independant and can be used ubiquitously.
 
-## WebStack 
+## WebStack
 
 - Front-End Development: React, Redux, Web Stomp, Web Socket
 - Back-End Development : KAFKA,Node JS, mongoose
@@ -55,12 +55,11 @@ We will be publishing the app on Docker so that the app is platform independant 
 
 ## CurrentStatus
 
-**7th December,2021:** We have created a full architecture of 3 Kakfka broker nodes and n number of subscribers that interact with each other in our pub sub model. The client can subscribe to three subscriptions and the data will be displayed in his dashboard. The three kafka broker nodes are connected to a single zookeeper that is responsible for managing and coordination between these nodes. The publisher extracts the data from the live api and pushes the data into the respective kafka broker nodes with the help of the zookeeper. When the consumer pulls the data for a particular subscribed topic the zookeeper facilitates the request by extracting the data from the appropriate kafka broker node. For every topic we have created two partitions that will help in replication of data and thus fault tolerance. The KAFKA comsumer and the producer communicate via sockets to exchange messages. 
+**7th December,2021:** We have created a full architecture of 3 Kakfka broker nodes and n number of subscribers that interact with each other in our pub sub model. The client can subscribe to three subscriptions and the data will be displayed in his dashboard. The three kafka broker nodes are connected to a single zookeeper that is responsible for managing and coordination between these nodes. The publisher extracts the data from the live api and pushes the data into the respective kafka broker nodes with the help of the zookeeper. When the consumer pulls the data for a particular subscribed topic the zookeeper facilitates the request by extracting the data from the appropriate kafka broker node. For every topic we have created two partitions that will help in replication of data and thus fault tolerance. The KAFKA comsumer and the producer communicate via sockets to exchange messages.
 
 ### Architectural Model
 
 ![](screenshots/PubSub.jpg)
-
 
 ### Backend Status:
 
@@ -116,11 +115,13 @@ const userSchema = new mongoose.Schema({
 ```
 
 ### KAFKA Deployment
+
 Visualization of KAFKA is done using CONDUKTOR.
 
 ![](screenshots/11_KAFKA.png)
 
 ### Docker Deployment
+
 ![](screenshots/9_docker.png)
 
 ### Frontend Status:
@@ -158,21 +159,17 @@ Visualization of KAFKA is done using CONDUKTOR.
 
   ![](screenshots/5_YourSubs.png)
 
-- Going to the subscription page of topic one (Teams available in a country) 
+- Going to the subscription page of topic one (Teams available in a country)
 
   ![](screenshots/6_SubscriptionPage.png)
 
 - Topic 2: Team Win Statistics
 
   ![](screenshots/7_StatsOfTeams.png)
-  
+
 - Topic 3: Umpires By Country
 
   ![](screenshots/8_UmpiresByCountry.png)
-  
-- Advertisement button toggle
-
-  ![](screenshots/10_Profile.png)
 
 ## Installation
 
@@ -193,14 +190,14 @@ docker build -t cricket-api .
 docker-compose up --remove-orphans
 ```
 
-
 ## Contributors
 
 [@RahulSharma](https://github.com/webber2408).
+
 - Frontend
 - KAFKA Consumer
 
 [@AruvanshNigam](https://github.com/Aruvansh1997).
+
 - Publisher
 - KAFKA Producer
-
