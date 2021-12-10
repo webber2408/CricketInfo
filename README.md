@@ -118,7 +118,11 @@ const userSchema = new mongoose.Schema({
 
 Visualization of KAFKA is done using CONDUKTOR.
 
-![](screenshots/11_KAFKA.png)
+![](screenshots/k1.png)
+
+![](screenshots/k2.png)
+
+![](screenshots/k3.png)
 
 ### Docker Deployment
 
