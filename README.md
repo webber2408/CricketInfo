@@ -124,6 +124,9 @@ Visualization of KAFKA is done using CONDUKTOR.
 
 ![](screenshots/k3.png)
 
+3 Broker Nodes, 10 Consumers, 6 Topics
+![](screenshots/k4.png)
+
 ### Docker Deployment
 
 ![](screenshots/9_docker.png)
