@@ -119,15 +119,19 @@ const userSchema = new mongoose.Schema({
 Visualization of KAFKA is done using CONDUKTOR.
 
 - Topics that a user can register to
+
   ![](screenshots/k1.png)
 
 - Details of a Topic
+
   ![](screenshots/k2.png)
 
 - Brokers Node Details
+
   ![](screenshots/k3.png)
 
 - 3 Broker Nodes, 10 Consumers, 6 Topics(Connected to frontend are only 3 of them)
+
   ![](screenshots/k4.png)
 
 ### Docker Deployment
